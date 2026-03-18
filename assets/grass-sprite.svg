@@ -1,0 +1,26 @@
+<svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+  <!-- Grass sprite - clear object on transparent background -->
+  <g id="grassSprite">
+    <!-- Dense grass clump - dark green base -->
+    <rect x="2" y="7" width="8" height="4" fill="#2D6B1F"/>
+
+    <!-- Middle layer -->
+    <rect x="1" y="6" width="10" height="4" fill="#3D8B2F"/>
+    <rect x="2" y="5" width="8" height="3" fill="#4DA840"/>
+
+    <!-- Grass blades standing out -->
+    <rect x="2" y="4" width="2" height="5" fill="#5DBE50"/>
+    <rect x="5" y="3" width="2" height="6" fill="#5DBE50"/>
+    <rect x="8" y="4" width="2" height="5" fill="#5DBE50"/>
+
+    <!-- Bright highlights on tips -->
+    <rect x="2" y="3" width="2" height="2" fill="#7DE070"/>
+    <rect x="5" y="2" width="2" height="2" fill="#7DE070"/>
+    <rect x="8" y="3" width="2" height="2" fill="#7DE070"/>
+
+    <!-- Sharp edge details -->
+    <rect x="3" y="2" width="1" height="1" fill="#9CFF8F"/>
+    <rect x="6" y="1" width="1" height="1" fill="#9CFF8F"/>
+    <rect x="9" y="2" width="1" height="1" fill="#9CFF8F"/>
+  </g>
+</svg>

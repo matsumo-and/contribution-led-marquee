@@ -4,6 +4,8 @@
 
 import { GameMap, TileType } from './map';
 import { Point } from './pathfinding';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const CELL_SIZE = 12;
 const ANIMATION_DURATION = 10; // seconds
@@ -37,8 +39,57 @@ export function renderSVG(map: GameMap, options: RenderOptions): string {
   return svg;
 }
 
+function loadDefaultTileTexture(): string {
+  try {
+    const texturePath = path.join(__dirname, '../assets/default-tile-texture.svg');
+    const svgContent = fs.readFileSync(texturePath, 'utf8');
+
+    // Extract the pattern definition from the SVG
+    const patternMatch = svgContent.match(/<pattern[^>]*>[\s\S]*?<\/pattern>/);
+    if (patternMatch) {
+      return patternMatch[0];
+    }
+  } catch (error) {
+    console.warn('Failed to load tile texture, using fallback');
+  }
+
+  // Fallback pattern
+  return `<pattern id="defaultTileTexture" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+    <rect width="20" height="20" fill="#9DC88D"/>
+  </pattern>`;
+}
+
+function loadGrassSprite(): string {
+  try {
+    const spritePath = path.join(__dirname, '../assets/grass-sprite.svg');
+    const svgContent = fs.readFileSync(spritePath, 'utf8');
+
+    // Extract the g element with grass sprite
+    const spriteMatch = svgContent.match(/<g[^>]*id="grassSprite"[^>]*>[\s\S]*?<\/g>/);
+    if (spriteMatch) {
+      return `<symbol id="grassSprite" viewBox="0 0 12 12">${spriteMatch[0]}</symbol>`;
+    }
+  } catch (error) {
+    console.warn('Failed to load grass sprite, using fallback');
+  }
+
+  // Fallback grass sprite
+  return `<symbol id="grassSprite" viewBox="0 0 12 12">
+    <rect width="12" height="12" fill="#9DC88D"/>
+    <rect x="3" y="4" width="1" height="5" fill="#7CB46C" opacity="0.9"/>
+    <rect x="6" y="4" width="1" height="5" fill="#68A858" opacity="0.9"/>
+    <rect x="9" y="5" width="1" height="4" fill="#7CB46C" opacity="0.8"/>
+  </symbol>`;
+}
+
 function getSpriteDefs(): string {
+  const defaultTileTexture = loadDefaultTileTexture();
+  const grassSprite = loadGrassSprite();
+
   return `
+    ${defaultTileTexture}
+    ${grassSprite}
+
     <!-- Dog sprite -->
     <symbol id="dog" viewBox="0 0 24 24">
       <!-- Body -->
@@ -91,39 +142,20 @@ function renderTiles(map: GameMap): string {
 
 function renderTile(type: TileType, x: number, y: number): string {
   switch (type) {
+    case TileType.EMPTY:
+      // Empty tile - default texture
+      return `<rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="url(#defaultTileTexture)"/>`;
+
     case TileType.GRASS:
-      return `<rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="#90EE90"/>`;
-
-    case TileType.FLOWER:
+      // Grass sprite on default texture background
       return `
-        <rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="#90EE90"/>
-        <rect x="${x + 4}" y="${y + 4}" width="4" height="4" fill="#FFB6C1"/>
-        <rect x="${x + 5}" y="${y + 3}" width="2" height="2" fill="#FF69B4"/>
-        <rect x="${x + 5}" y="${y + 7}" width="2" height="2" fill="#FF69B4"/>
-        <rect x="${x + 3}" y="${y + 5}" width="2" height="2" fill="#FF69B4"/>
-        <rect x="${x + 7}" y="${y + 5}" width="2" height="2" fill="#FF69B4"/>
-      `;
-
-    case TileType.ROCK:
-      return `
-        <rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="#90EE90"/>
-        <rect x="${x + 2}" y="${y + 3}" width="8" height="6" fill="#808080"/>
-        <rect x="${x + 3}" y="${y + 4}" width="2" height="2" fill="#696969"/>
-        <rect x="${x + 6}" y="${y + 5}" width="2" height="2" fill="#696969"/>
-      `;
-
-    case TileType.TREE:
-      return `
-        <rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="#90EE90"/>
-        <rect x="${x + 5}" y="${y + 6}" width="2" height="5" fill="#8B4513"/>
-        <rect x="${x + 2}" y="${y + 2}" width="8" height="6" fill="#228B22"/>
-        <rect x="${x + 3}" y="${y + 1}" width="6" height="2" fill="#228B22"/>
-        <rect x="${x + 4}" y="${y}" width="4" height="1" fill="#228B22"/>
+        <rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="url(#defaultTileTexture)"/>
+        <use href="#grassSprite" x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}"/>
       `;
 
     case TileType.TREASURE:
       return `
-        <rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="#90EE90"/>
+        <rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="#9DC88D"/>
         <rect x="${x + 2}" y="${y + 2}" width="8" height="8" fill="#FFD700"/>
         <rect x="${x + 3}" y="${y + 3}" width="6" height="6" fill="#FFA500"/>
         <rect x="${x + 5}" y="${y + 5}" width="2" height="2" fill="#B8860B"/>

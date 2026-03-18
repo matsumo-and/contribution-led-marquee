@@ -1,0 +1,24 @@
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Tile texture pattern with random dots -->
+    <pattern id="defaultTileTexture" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <!-- Base color -->
+      <rect width="20" height="20" fill="#9DC88D"/>
+
+      <!-- Random lighter dots -->
+      <rect x="2" y="3" width="2" height="2" fill="#C8E6C9" opacity="0.6"/>
+      <rect x="8" y="1" width="2" height="2" fill="#C8E6C9" opacity="0.5"/>
+      <rect x="14" y="5" width="2" height="2" fill="#C8E6C9" opacity="0.7"/>
+      <rect x="5" y="9" width="2" height="2" fill="#C8E6C9" opacity="0.4"/>
+      <rect x="11" y="11" width="2" height="2" fill="#C8E6C9" opacity="0.6"/>
+      <rect x="16" y="14" width="2" height="2" fill="#C8E6C9" opacity="0.5"/>
+      <rect x="3" y="16" width="2" height="2" fill="#C8E6C9" opacity="0.5"/>
+      <rect x="9" y="18" width="2" height="2" fill="#C8E6C9" opacity="0.6"/>
+      <rect x="17" y="9" width="2" height="2" fill="#C8E6C9" opacity="0.4"/>
+      <rect x="6" y="14" width="2" height="2" fill="#C8E6C9" opacity="0.7"/>
+    </pattern>
+  </defs>
+
+  <!-- Full tile using the pattern -->
+  <rect width="100" height="100" fill="url(#defaultTileTexture)"/>
+</svg>
