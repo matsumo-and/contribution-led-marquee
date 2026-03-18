@@ -16,36 +16,34 @@ export interface ContributionGrid {
 }
 
 export function parseContributions(html: string): ContributionGrid {
-  // Extract all rect elements using regex
-  const rectRegex = /<rect[^>]*>/g;
-  const rects = html.match(rectRegex) || [];
+  // Extract all td elements with contribution data using regex
+  const tdRegex = /<td[^>]*data-date[^>]*>/g;
+  const tds = html.match(tdRegex) || [];
 
   const cells: ContributionCell[] = [];
 
-  for (const rect of rects) {
-    // Extract data-count attribute
-    const countMatch = rect.match(/data-count="(\d+)"/);
+  for (const td of tds) {
     // Extract data-date attribute
-    const dateMatch = rect.match(/data-date="([^"]+)"/);
-    // Extract x and y attributes
-    const xMatch = rect.match(/x="(-?\d+)"/);
-    const yMatch = rect.match(/y="(-?\d+)"/);
+    const dateMatch = td.match(/data-date="([^"]+)"/);
+    // Extract data-level attribute (GitHub uses 0-4 levels)
+    const levelMatch = td.match(/data-level="(\d+)"/);
+    // Extract data-ix attribute for week number (column)
+    const ixMatch = td.match(/data-ix="(\d+)"/);
+    // Extract id to get the row number (day of week)
+    const idMatch = td.match(/id="contribution-day-component-(\d+)-\d+"/);
 
-    if (countMatch && dateMatch && xMatch && yMatch) {
+    if (dateMatch && levelMatch && ixMatch && idMatch) {
+      const x = parseInt(ixMatch[1]);  // Week number (column)
+      const y = parseInt(idMatch[1]);  // Day of week (row: 0=Sun, 1=Mon, ...)
+
       cells.push({
         date: dateMatch[1],
-        count: parseInt(countMatch[1]),
-        x: parseInt(xMatch[1]),
-        y: parseInt(yMatch[1])
+        count: parseInt(levelMatch[1]), // Use level as count approximation
+        x: x,
+        y: y
       });
     }
   }
-
-  // Sort cells and determine grid dimensions
-  const sortedCells = cells.sort((a, b) => {
-    if (a.x === b.x) return a.y - b.y;
-    return a.x - b.x;
-  });
 
   // Calculate grid dimensions
   const uniqueX = [...new Set(cells.map(c => c.x))].sort((a, b) => a - b);

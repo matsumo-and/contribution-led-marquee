@@ -1,7 +1,6 @@
 /**
  * Fetches GitHub contribution data for a given username
  */
-
 export async function fetchContributions(username: string): Promise<string> {
   const url = `https://github.com/users/${username}/contributions`;
 

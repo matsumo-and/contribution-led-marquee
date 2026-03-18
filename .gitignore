@@ -11,6 +11,7 @@ lerna-debug.log*
 
 # Build output
 dist/compiled/
+dist/
 
 # Environment variables
 .env
