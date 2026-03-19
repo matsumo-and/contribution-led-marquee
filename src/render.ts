@@ -105,15 +105,39 @@ function loadGrassWithFlowersSprite(): string {
   </symbol>`;
 }
 
+function loadRockSprite(): string {
+  try {
+    const spritePath = path.join(__dirname, '../assets/rock-sprite.svg');
+    const svgContent = fs.readFileSync(spritePath, 'utf8');
+
+    // Extract the g element with rock sprite
+    const spriteMatch = svgContent.match(/<g[^>]*id="rockSprite"[^>]*>[\s\S]*?<\/g>/);
+    if (spriteMatch) {
+      return `<symbol id="rockSprite" viewBox="0 0 24 24">${spriteMatch[0]}</symbol>`;
+    }
+  } catch (error) {
+    console.warn('Failed to load rock sprite, using fallback');
+  }
+
+  // Fallback rock sprite
+  return `<symbol id="rockSprite" viewBox="0 0 24 24">
+    <rect x="8" y="14" width="8" height="6" fill="#5A5A5A"/>
+    <rect x="9" y="12" width="6" height="4" fill="#707070"/>
+    <rect x="10" y="10" width="4" height="3" fill="#8A8A8A"/>
+  </symbol>`;
+}
+
 function getSpriteDefs(): string {
   const defaultTileTexture = loadDefaultTileTexture();
   const grassSprite = loadGrassSprite();
   const grassWithFlowersSprite = loadGrassWithFlowersSprite();
+  const rockSprite = loadRockSprite();
 
   return `
     ${defaultTileTexture}
     ${grassSprite}
     ${grassWithFlowersSprite}
+    ${rockSprite}
 
     <!-- Dog sprite -->
     <symbol id="dog" viewBox="0 0 24 24">
@@ -158,17 +182,28 @@ function renderTiles(map: GameMap): string {
       const tileX = x * CELL_SIZE;
       const tileY = y * CELL_SIZE;
 
-      tiles += renderTile(tile.type, tileX, tileY);
+      tiles += renderTile(tile.type, tileX, tileY, x, y);
     }
   }
 
   return tiles;
 }
 
-function renderTile(type: TileType, x: number, y: number): string {
+function renderTile(type: TileType, x: number, y: number, gridX: number, gridY: number): string {
   switch (type) {
     case TileType.EMPTY:
-      // Empty tile - default texture
+      // Empty tile - default texture with random rocks
+      // Use deterministic random based on position
+      const seed = gridX * 1000 + gridY;
+      const random = Math.abs(Math.sin(seed) * 10000) % 100;
+
+      // 10% chance to show a rock
+      if (random < 5) {
+        return `
+          <rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="url(#defaultTileTexture)"/>
+          <use href="#rockSprite" x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}"/>
+        `;
+      }
       return `<rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="url(#defaultTileTexture)"/>`;
 
     case TileType.GRASS:
