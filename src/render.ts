@@ -67,28 +67,53 @@ function loadGrassSprite(): string {
     // Extract the g element with grass sprite
     const spriteMatch = svgContent.match(/<g[^>]*id="grassSprite"[^>]*>[\s\S]*?<\/g>/);
     if (spriteMatch) {
-      return `<symbol id="grassSprite" viewBox="0 0 12 12">${spriteMatch[0]}</symbol>`;
+      return `<symbol id="grassSprite" viewBox="0 0 24 24">${spriteMatch[0]}</symbol>`;
     }
   } catch (error) {
     console.warn('Failed to load grass sprite, using fallback');
   }
 
   // Fallback grass sprite
-  return `<symbol id="grassSprite" viewBox="0 0 12 12">
-    <rect width="12" height="12" fill="#9DC88D"/>
-    <rect x="3" y="4" width="1" height="5" fill="#7CB46C" opacity="0.9"/>
-    <rect x="6" y="4" width="1" height="5" fill="#68A858" opacity="0.9"/>
-    <rect x="9" y="5" width="1" height="4" fill="#7CB46C" opacity="0.8"/>
+  return `<symbol id="grassSprite" viewBox="0 0 24 24">
+    <rect width="24" height="24" fill="#9DC88D"/>
+    <rect x="6" y="8" width="2" height="10" fill="#7CB46C" opacity="0.9"/>
+    <rect x="12" y="8" width="2" height="10" fill="#68A858" opacity="0.9"/>
+    <rect x="18" y="10" width="2" height="8" fill="#7CB46C" opacity="0.8"/>
+  </symbol>`;
+}
+
+function loadGrassWithFlowersSprite(): string {
+  try {
+    const spritePath = path.join(__dirname, '../assets/grass-with-flowers-sprite.svg');
+    const svgContent = fs.readFileSync(spritePath, 'utf8');
+
+    // Extract the g element with grass with flowers sprite
+    const spriteMatch = svgContent.match(/<g[^>]*id="grassWithFlowersSprite"[^>]*>[\s\S]*?<\/g>/);
+    if (spriteMatch) {
+      return `<symbol id="grassWithFlowersSprite" viewBox="0 0 24 24">${spriteMatch[0]}</symbol>`;
+    }
+  } catch (error) {
+    console.warn('Failed to load grass with flowers sprite, using fallback');
+  }
+
+  // Fallback grass with flowers sprite
+  return `<symbol id="grassWithFlowersSprite" viewBox="0 0 24 24">
+    <rect width="24" height="24" fill="#9DC88D"/>
+    <rect x="6" y="8" width="2" height="10" fill="#7CB46C" opacity="0.9"/>
+    <rect x="12" y="8" width="2" height="10" fill="#68A858" opacity="0.9"/>
+    <rect x="10" y="6" width="2" height="2" fill="#FF88CC"/>
   </symbol>`;
 }
 
 function getSpriteDefs(): string {
   const defaultTileTexture = loadDefaultTileTexture();
   const grassSprite = loadGrassSprite();
+  const grassWithFlowersSprite = loadGrassWithFlowersSprite();
 
   return `
     ${defaultTileTexture}
     ${grassSprite}
+    ${grassWithFlowersSprite}
 
     <!-- Dog sprite -->
     <symbol id="dog" viewBox="0 0 24 24">
@@ -151,6 +176,13 @@ function renderTile(type: TileType, x: number, y: number): string {
       return `
         <rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="url(#defaultTileTexture)"/>
         <use href="#grassSprite" x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}"/>
+      `;
+
+    case TileType.GRASS_WITH_FLOWERS:
+      // Grass with flowers sprite on default texture background
+      return `
+        <rect x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}" fill="url(#defaultTileTexture)"/>
+        <use href="#grassWithFlowersSprite" x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}"/>
       `;
 
     case TileType.TREASURE:

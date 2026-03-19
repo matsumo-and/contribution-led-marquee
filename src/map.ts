@@ -5,9 +5,10 @@
 import { ContributionGrid, ContributionCell } from './parser';
 
 export enum TileType {
-  EMPTY = 'empty',      // Level 0 - no contributions
-  GRASS = 'grass',      // Level 1-5 - has contributions
-  TREASURE = 'treasure' // Not used yet
+  EMPTY = 'empty',                // Level 0 - no contributions
+  GRASS = 'grass',                // Level 1-9 - has contributions
+  GRASS_WITH_FLOWERS = 'flowers', // Level 10+ - many contributions
+  TREASURE = 'treasure'           // Not used yet
 }
 
 export interface Tile {
@@ -61,6 +62,6 @@ export function createGameMap(grid: ContributionGrid): GameMap {
 
 function getTileType(contributions: number): TileType {
   if (contributions === 0) return TileType.EMPTY;
-  // Level 1-4 are all grass
+  if (contributions >= 3) return TileType.GRASS_WITH_FLOWERS;
   return TileType.GRASS;
 }
