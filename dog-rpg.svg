@@ -168,22 +168,39 @@
     <rect x="11" y="12" width="2" height="2" fill="#8AEA8A"/>
     <rect x="11" y="11" width="2" height="2" fill="#9AFA9A"/>
 
-    <!-- Flowers scattered on leaves -->
-    <!-- Pink flower on left leaf -->
+    <!-- Flowers - larger and more prominent -->
+    <!-- Large pink flower cluster (left) -->
+    <rect x="6" y="12" width="3" height="3" fill="#FF66BB"/>
     <rect x="7" y="13" width="2" height="2" fill="#FF88CC"/>
-    <rect x="8" y="14" width="1" height="1" fill="#FFAADD"/>
+    <rect x="7" y="14" width="2" height="1" fill="#FFAADD"/>
+    <rect x="7" y="12" width="1" height="1" fill="#FFAADD"/>
+    <rect x="8" y="12" width="1" height="1" fill="#FFCCEE"/>
 
-    <!-- Yellow flower on top -->
+    <!-- Large yellow flower (top center) -->
+    <rect x="10" y="7" width="3" height="3" fill="#FFCC00"/>
     <rect x="11" y="8" width="2" height="2" fill="#FFDD44"/>
-    <rect x="12" y="9" width="1" height="1" fill="#FFEE88"/>
+    <rect x="11" y="7" width="2" height="1" fill="#FFEE88"/>
+    <rect x="11" y="9" width="1" height="1" fill="#FFFFAA"/>
 
-    <!-- Purple flower on right leaf -->
-    <rect x="15" y="12" width="2" height="2" fill="#DD88FF"/>
-    <rect x="16" y="13" width="1" height="1" fill="#EEAAFF"/>
+    <!-- Large purple/pink flower (right) -->
+    <rect x="15" y="11" width="3" height="3" fill="#DD66FF"/>
+    <rect x="16" y="12" width="2" height="2" fill="#EE88FF"/>
+    <rect x="16" y="13" width="2" height="1" fill="#FFAAFF"/>
+    <rect x="16" y="11" width="1" height="1" fill="#FFCCFF"/>
 
-    <!-- Small flowers -->
-    <rect x="9" y="11" width="1" height="1" fill="#FFAADD"/>
-    <rect x="14" y="10" width="1" height="1" fill="#FFEE88"/>
+    <!-- Medium pink flower (bottom right) -->
+    <rect x="13" y="14" width="2" height="2" fill="#FF88CC"/>
+    <rect x="14" y="15" width="1" height="1" fill="#FFAADD"/>
+
+    <!-- Medium pink flower (top left) -->
+    <rect x="7" y="8" width="2" height="2" fill="#FF88CC"/>
+    <rect x="8" y="9" width="1" height="1" fill="#FFAADD"/>
+
+    <!-- Small flowers scattered -->
+    <rect x="9" y="10" width="1" height="1" fill="#FFAADD"/>
+    <rect x="14" y="9" width="1" height="1" fill="#FFEE88"/>
+    <rect x="12" y="13" width="1" height="1" fill="#FFCCEE"/>
+    <rect x="10" y="15" width="1" height="1" fill="#EE88FF"/>
   </g></symbol>
 
     <!-- Dog sprite -->
