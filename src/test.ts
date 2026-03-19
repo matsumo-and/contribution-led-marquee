@@ -6,6 +6,7 @@ import { parseContributions } from './parser';
 import { createGameMap } from './map';
 import { findPath, findNearestTreasure } from './pathfinding';
 import { renderSVG } from './render';
+import { createDefaultPath } from './index';
 import * as fs from 'fs/promises';
 
 // Sample contribution HTML (simulated data)
@@ -58,17 +59,11 @@ async function generateTestSVG() {
   const gameMap = createGameMap(contributionGrid);
   console.log(`Found ${gameMap.treasures.length} treasure tiles`);
 
-  // Determine dog's path
-  const start = { x: 0, y: Math.floor(gameMap.height / 2) };
-  let dogPath: { x: number; y: number }[] = [];
+  // Determine dog's path - use default zigzag path
+  const dogPath = createDefaultPath(gameMap);
 
-  if (gameMap.treasures.length > 0) {
-    const nearestTreasure = findNearestTreasure(gameMap, start);
-    if (nearestTreasure) {
-      console.log(`Finding path to treasure at (${nearestTreasure.x}, ${nearestTreasure.y})`);
-      dogPath = findPath(gameMap, start, nearestTreasure);
-    }
-  }
+  console.log(`Path length: ${dogPath.length}`);
+  console.log(`Path points: ${dogPath.map(p => `(${p.x},${p.y})`).join(' -> ')}`);
 
   // Render SVG with animation
   const svg = renderSVG(gameMap, {

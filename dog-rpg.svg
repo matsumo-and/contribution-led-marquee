@@ -18,7 +18,7 @@
       <rect x="17" y="9" width="2" height="2" fill="#C8E6C9" opacity="0.4"/>
       <rect x="6" y="14" width="2" height="2" fill="#C8E6C9" opacity="0.7"/>
     </pattern>
-    <symbol id="grassSprite" viewBox="0 0 24 24"><g id="grassSprite">
+    <symbol id="grassSprite" viewBox="0 0 24 24">
     <!-- Center/Base -->
     <rect x="10" y="14" width="4" height="4" fill="#1A3A1A"/>
     <rect x="11" y="13" width="2" height="2" fill="#254A25"/>
@@ -92,8 +92,8 @@
     <!-- Center highlight -->
     <rect x="11" y="12" width="2" height="2" fill="#8AEA8A"/>
     <rect x="11" y="11" width="2" height="2" fill="#9AFA9A"/>
-  </g></symbol>
-    <symbol id="grassWithFlowersSprite" viewBox="0 0 24 24"><g id="grassWithFlowersSprite">
+  </symbol>
+    <symbol id="grassWithFlowersSprite" viewBox="0 0 24 24">
     <!-- Center/Base -->
     <rect x="10" y="14" width="4" height="4" fill="#1A3A1A"/>
     <rect x="11" y="13" width="2" height="2" fill="#254A25"/>
@@ -149,9 +149,8 @@
     <rect x="14" y="10" width="1" height="1" fill="#7ADA7A"/>
 
     <!-- Leaf pointing up (smallest, top view) -->
-    <rect x="10" y="6" width="4" height="5" fill="#2A5A2A"/>
     <rect x="11" y="6" width="2" height="4" fill="#356535"/>
-    <rect x="11" y="6" width="2" height="3" fill="#4A8A4A"/>
+    <rect x="9" y="6" width="6" height="3" fill="#4A8A4A"/>
     <rect x="11" y="7" width="2" height="2" fill="#5AAA5A"/>
     <rect x="11" y="8" width="2" height="2" fill="#6ACA6A"/>
     <rect x="12" y="8" width="1" height="1" fill="#7ADA7A"/>
@@ -177,7 +176,7 @@
     <rect x="8" y="12" width="1" height="1" fill="#FFCCEE"/>
 
     <!-- Large yellow flower (top center) -->
-    <rect x="10" y="7" width="3" height="3" fill="#FFCC00"/>
+    <rect x="10" y="7" width="4" height="4" fill="#FFCC00"/>
     <rect x="11" y="8" width="2" height="2" fill="#FFDD44"/>
     <rect x="11" y="7" width="2" height="1" fill="#FFEE88"/>
     <rect x="11" y="9" width="1" height="1" fill="#FFFFAA"/>
@@ -201,8 +200,8 @@
     <rect x="14" y="9" width="1" height="1" fill="#FFEE88"/>
     <rect x="12" y="13" width="1" height="1" fill="#FFCCEE"/>
     <rect x="10" y="15" width="1" height="1" fill="#EE88FF"/>
-  </g></symbol>
-    <symbol id="rockSprite" viewBox="0 0 24 24"><g id="rockSprite">
+  </symbol>
+    <symbol id="rockSprite" viewBox="0 0 24 24">
     <!-- Deep shadow (left and bottom) -->
     <rect x="5" y="19" width="3" height="2" fill="#3A3A3A"/>
     <rect x="8" y="19" width="6" height="2" fill="#4A4A4A"/>
@@ -270,7 +269,118 @@
     <rect x="11" y="10" width="1" height="1" fill="#C8C8C8"/>
     <rect x="15" y="11" width="1" height="1" fill="#B0B0B0"/>
     <rect x="10" y="14" width="1" height="1" fill="#A0A0A0"/>
-  </g></symbol>
+  </symbol>
+    <symbol id="cat-right" viewBox="0 0 24 24">
+  <!-- Body -->
+  <rect x="10" y="14" width="6" height="4" fill="#1A1A1A"/>
+  <rect x="9" y="15" width="1" height="2" fill="#1A1A1A"/>
+
+  <!-- Head -->
+  <rect x="15" y="12" width="4" height="4" fill="#1A1A1A"/>
+  <rect x="16" y="11" width="2" height="1" fill="#1A1A1A"/>
+
+  <!-- Ears -->
+  <rect x="16" y="10" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="18" y="10" width="1" height="1" fill="#1A1A1A"/>
+
+  <!-- Eye -->
+  <rect x="17" y="13" width="1" height="1" fill="#FFD700"/>
+
+  <!-- Tail (curved up) -->
+  <rect x="9" y="13" width="2" height="1" fill="#1A1A1A"/>
+  <rect x="8" y="12" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="8" y="11" width="1" height="1" fill="#1A1A1A"/>
+
+  <!-- Legs -->
+  <rect x="11" y="18" width="1" height="2" fill="#1A1A1A"/>
+  <rect x="14" y="18" width="1" height="2" fill="#1A1A1A"/>
+</symbol>
+<symbol id="cat-left" viewBox="0 0 24 24">
+  <!-- Body -->
+  <rect x="8" y="14" width="6" height="4" fill="#1A1A1A"/>
+  <rect x="14" y="15" width="1" height="2" fill="#1A1A1A"/>
+
+  <!-- Head -->
+  <rect x="5" y="12" width="4" height="4" fill="#1A1A1A"/>
+  <rect x="6" y="11" width="2" height="1" fill="#1A1A1A"/>
+
+  <!-- Ears -->
+  <rect x="5" y="10" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="7" y="10" width="1" height="1" fill="#1A1A1A"/>
+
+  <!-- Eye -->
+  <rect x="6" y="13" width="1" height="1" fill="#FFD700"/>
+
+  <!-- Tail (curved up) -->
+  <rect x="13" y="13" width="2" height="1" fill="#1A1A1A"/>
+  <rect x="15" y="12" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="15" y="11" width="1" height="1" fill="#1A1A1A"/>
+
+  <!-- Legs -->
+  <rect x="9" y="18" width="1" height="2" fill="#1A1A1A"/>
+  <rect x="12" y="18" width="1" height="2" fill="#1A1A1A"/>
+</symbol>
+<symbol id="cat-up" viewBox="0 0 24 24">
+  <!-- Tail (at back) -->
+  <rect x="11" y="17" width="2" height="2" fill="#1A1A1A"/>
+  <rect x="10" y="19" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="13" y="19" width="1" height="1" fill="#1A1A1A"/>
+
+  <!-- Body -->
+  <rect x="10" y="13" width="4" height="5" fill="#1A1A1A"/>
+  <rect x="9" y="14" width="1" height="3" fill="#1A1A1A"/>
+  <rect x="14" y="14" width="1" height="3" fill="#1A1A1A"/>
+
+  <!-- Head -->
+  <rect x="10" y="10" width="4" height="4" fill="#1A1A1A"/>
+  <rect x="11" y="9" width="2" height="1" fill="#1A1A1A"/>
+
+  <!-- Ears -->
+  <rect x="10" y="9" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="13" y="9" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="10" y="8" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="13" y="8" width="1" height="1" fill="#1A1A1A"/>
+
+  <!-- Eyes -->
+  <rect x="11" y="11" width="1" height="1" fill="#FFD700"/>
+  <rect x="12" y="11" width="1" height="1" fill="#FFD700"/>
+
+  <!-- Legs -->
+  <rect x="10" y="18" width="1" height="2" fill="#1A1A1A"/>
+  <rect x="13" y="18" width="1" height="2" fill="#1A1A1A"/>
+</symbol>
+<symbol id="cat-down" viewBox="0 0 24 24">
+  <!-- Head -->
+  <rect x="10" y="11" width="4" height="4" fill="#1A1A1A"/>
+  <rect x="11" y="10" width="2" height="1" fill="#1A1A1A"/>
+
+  <!-- Ears -->
+  <rect x="10" y="10" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="13" y="10" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="10" y="9" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="13" y="9" width="1" height="1" fill="#1A1A1A"/>
+
+  <!-- Eyes -->
+  <rect x="11" y="12" width="1" height="1" fill="#FFD700"/>
+  <rect x="12" y="12" width="1" height="1" fill="#FFD700"/>
+
+  <!-- Body -->
+  <rect x="10" y="14" width="4" height="4" fill="#1A1A1A"/>
+  <rect x="9" y="15" width="1" height="2" fill="#1A1A1A"/>
+  <rect x="14" y="15" width="1" height="2" fill="#1A1A1A"/>
+
+  <!-- Tail (at back, curved) -->
+  <rect x="11" y="18" width="2" height="1" fill="#1A1A1A"/>
+  <rect x="10" y="19" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="13" y="19" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="9" y="20" width="1" height="1" fill="#1A1A1A"/>
+  <rect x="14" y="20" width="1" height="1" fill="#1A1A1A"/>
+
+  <!-- Legs -->
+  <rect x="10" y="18" width="1" height="2" fill="#1A1A1A"/>
+  <rect x="13" y="18" width="1" height="2" fill="#1A1A1A"/>
+</symbol>
+
 
     <!-- Dog sprite -->
     <symbol id="dog" viewBox="0 0 24 24">
@@ -787,21 +897,24 @@
       <rect x="624" y="72" width="12" height="12" fill="url(#defaultTileTexture)"/>
 
   <!-- Paw prints -->
-  <use href="#paw" x="0" y="36" width="12" height="12"/><use href="#paw" x="12" y="36" width="12" height="12"/><use href="#paw" x="24" y="36" width="12" height="12"/><use href="#paw" x="36" y="36" width="12" height="12"/><use href="#paw" x="48" y="36" width="12" height="12"/><use href="#paw" x="60" y="36" width="12" height="12"/><use href="#paw" x="72" y="36" width="12" height="12"/><use href="#paw" x="84" y="36" width="12" height="12"/><use href="#paw" x="96" y="36" width="12" height="12"/><use href="#paw" x="108" y="36" width="12" height="12"/><use href="#paw" x="120" y="36" width="12" height="12"/><use href="#paw" x="132" y="36" width="12" height="12"/><use href="#paw" x="144" y="36" width="12" height="12"/><use href="#paw" x="156" y="36" width="12" height="12"/><use href="#paw" x="168" y="36" width="12" height="12"/><use href="#paw" x="180" y="36" width="12" height="12"/><use href="#paw" x="192" y="36" width="12" height="12"/><use href="#paw" x="204" y="36" width="12" height="12"/><use href="#paw" x="216" y="36" width="12" height="12"/><use href="#paw" x="228" y="36" width="12" height="12"/><use href="#paw" x="240" y="36" width="12" height="12"/><use href="#paw" x="252" y="36" width="12" height="12"/><use href="#paw" x="264" y="36" width="12" height="12"/><use href="#paw" x="276" y="36" width="12" height="12"/><use href="#paw" x="288" y="36" width="12" height="12"/><use href="#paw" x="300" y="36" width="12" height="12"/><use href="#paw" x="312" y="36" width="12" height="12"/><use href="#paw" x="324" y="36" width="12" height="12"/><use href="#paw" x="336" y="36" width="12" height="12"/><use href="#paw" x="348" y="36" width="12" height="12"/><use href="#paw" x="360" y="36" width="12" height="12"/><use href="#paw" x="372" y="36" width="12" height="12"/><use href="#paw" x="384" y="36" width="12" height="12"/><use href="#paw" x="396" y="36" width="12" height="12"/><use href="#paw" x="408" y="36" width="12" height="12"/><use href="#paw" x="420" y="36" width="12" height="12"/><use href="#paw" x="432" y="36" width="12" height="12"/><use href="#paw" x="444" y="36" width="12" height="12"/><use href="#paw" x="456" y="36" width="12" height="12"/><use href="#paw" x="468" y="36" width="12" height="12"/><use href="#paw" x="480" y="36" width="12" height="12"/><use href="#paw" x="492" y="36" width="12" height="12"/><use href="#paw" x="504" y="36" width="12" height="12"/><use href="#paw" x="516" y="36" width="12" height="12"/><use href="#paw" x="528" y="36" width="12" height="12"/><use href="#paw" x="540" y="36" width="12" height="12"/><use href="#paw" x="552" y="36" width="12" height="12"/><use href="#paw" x="564" y="36" width="12" height="12"/><use href="#paw" x="576" y="36" width="12" height="12"/><use href="#paw" x="588" y="36" width="12" height="12"/><use href="#paw" x="600" y="36" width="12" height="12"/><use href="#paw" x="612" y="36" width="12" height="12"/>
+  <use href="#paw" x="624" y="72" width="12" height="12"/>
 
   <!-- Dog -->
   
-    <g>
-      <use href="#dog" width="12" height="12">
-        <animateMotion
-          dur="10s"
-          repeatCount="indefinite"
-          path="M6,42 L18,42 L30,42 L42,42 L54,42 L66,42 L78,42 L90,42 L102,42 L114,42 L126,42 L138,42 L150,42 L162,42 L174,42 L186,42 L198,42 L210,42 L222,42 L234,42 L246,42 L258,42 L270,42 L282,42 L294,42 L306,42 L318,42 L330,42 L342,42 L354,42 L366,42 L378,42 L390,42 L402,42 L414,42 L426,42 L438,42 L450,42 L462,42 L474,42 L486,42 L498,42 L510,42 L522,42 L534,42 L546,42 L558,42 L570,42 L582,42 L594,42 L606,42 L618,42 L630,42"
-          rotate="0"
-          keyTimes="0;0.019230769230769232;0.038461538461538464;0.057692307692307696;0.07692307692307693;0.09615384615384616;0.11538461538461539;0.1346153846153846;0.15384615384615385;0.17307692307692307;0.19230769230769232;0.21153846153846154;0.23076923076923078;0.25;0.2692307692307692;0.28846153846153844;0.3076923076923077;0.3269230769230769;0.34615384615384615;0.36538461538461536;0.38461538461538464;0.40384615384615385;0.4230769230769231;0.4423076923076923;0.46153846153846156;0.4807692307692308;0.5;0.5192307692307693;0.5384615384615384;0.5576923076923077;0.5769230769230769;0.5961538461538461;0.6153846153846154;0.6346153846153846;0.6538461538461539;0.6730769230769231;0.6923076923076923;0.7115384615384616;0.7307692307692307;0.75;0.7692307692307693;0.7884615384615384;0.8076923076923077;0.8269230769230769;0.8461538461538461;0.8653846153846154;0.8846153846153846;0.9038461538461539;0.9230769230769231;0.9423076923076923;0.9615384615384616;0.9807692307692307;1"
-          keyPoints="0;0.019230769230769232;0.038461538461538464;0.057692307692307696;0.07692307692307693;0.09615384615384616;0.11538461538461539;0.1346153846153846;0.15384615384615385;0.17307692307692307;0.19230769230769232;0.21153846153846154;0.23076923076923078;0.25;0.2692307692307692;0.28846153846153844;0.3076923076923077;0.3269230769230769;0.34615384615384615;0.36538461538461536;0.38461538461538464;0.40384615384615385;0.4230769230769231;0.4423076923076923;0.46153846153846156;0.4807692307692308;0.5;0.5192307692307693;0.5384615384615384;0.5576923076923077;0.5769230769230769;0.5961538461538461;0.6153846153846154;0.6346153846153846;0.6538461538461539;0.6730769230769231;0.6923076923076923;0.7115384615384616;0.7307692307692307;0.75;0.7692307692307693;0.7884615384615384;0.8076923076923077;0.8269230769230769;0.8461538461538461;0.8653846153846154;0.8846153846153846;0.9038461538461539;0.9230769230769231;0.9423076923076923;0.9615384615384616;0.9807692307692307;1"
-        />
-      </use>
-    </g>
+    <use href="#cat-right" x="0" y="0" width="12" height="12">
+      <animateMotion
+        path="M 12 0 L 24 0 L 36 0 L 48 0 L 60 0 L 72 0 L 84 0 L 96 0 L 108 0 L 120 0 L 132 0 L 144 0 L 156 0 L 168 0 L 180 0 L 192 0 L 204 0 L 216 0 L 228 0 L 240 0 L 252 0 L 264 0 L 276 0 L 288 0 L 300 0 L 312 0 L 324 0 L 336 0 L 348 0 L 360 0 L 372 0 L 384 0 L 396 0 L 408 0 L 420 0 L 420 12 L 432 12 L 444 12 L 444 0 L 456 0 L 468 0 L 480 0 L 492 0 L 504 0 L 516 0 L 528 0 L 540 0 L 552 0 L 564 0 L 576 0 L 588 0 L 600 0 L 612 0 L 624 0 L 624 12 L 612 12 L 600 12 L 588 12 L 576 12 L 564 12 L 552 12 L 540 12 L 528 12 L 528 0 L 516 0 L 504 0 L 504 12 L 492 12 L 480 12 L 468 12 L 456 12 L 444 12 L 432 12 L 420 12 L 408 12 L 408 0 L 396 0 L 384 0 L 384 12 L 372 12 L 360 12 L 348 12 L 336 12 L 324 12 L 312 12 L 300 12 L 288 12 L 276 12 L 264 12 L 264 0 L 252 0 L 240 0 L 240 12 L 228 12 L 216 12 L 204 12 L 192 12 L 180 12 L 168 12 L 156 12 L 144 12 L 132 12 L 120 12 L 108 12 L 96 12 L 84 12 L 72 12 L 60 12 L 48 12 L 36 12 L 24 12 L 12 12 L 0 12 L 0 24 L 12 24 L 24 24 L 36 24 L 48 24 L 60 24 L 72 24 L 84 24 L 96 24 L 108 24 L 120 24 L 132 24 L 144 24 L 156 24 L 168 24 L 180 24 L 192 24 L 204 24 L 216 24 L 228 24 L 240 24 L 252 24 L 264 24 L 276 24 L 276 12 L 288 12 L 300 12 L 300 24 L 312 24 L 324 24 L 336 24 L 348 24 L 360 24 L 372 24 L 384 24 L 396 24 L 408 24 L 420 24 L 432 24 L 444 24 L 456 24 L 468 24 L 480 24 L 492 24 L 504 24 L 516 24 L 528 24 L 540 24 L 552 24 L 564 24 L 576 24 L 588 24 L 600 24 L 612 24 L 624 24 L 624 36 L 612 36 L 600 36 L 588 36 L 588 24 L 576 24 L 564 24 L 564 36 L 552 36 L 540 36 L 540 24 L 528 24 L 516 24 L 516 36 L 504 36 L 492 36 L 480 36 L 468 36 L 456 36 L 444 36 L 432 36 L 420 36 L 408 36 L 396 36 L 384 36 L 372 36 L 360 36 L 348 36 L 336 36 L 324 36 L 312 36 L 300 36 L 288 36 L 276 36 L 264 36 L 252 36 L 240 36 L 228 36 L 216 36 L 204 36 L 192 36 L 180 36 L 168 36 L 156 36 L 144 36 L 132 36 L 120 36 L 108 36 L 96 36 L 84 36 L 72 36 L 60 36 L 48 36 L 36 36 L 24 36 L 12 36 L 0 36 L 0 48 L 12 48 L 24 48 L 36 48 L 48 48 L 60 48 L 72 48 L 84 48 L 96 48 L 108 48 L 108 36 L 120 36 L 132 36 L 132 48 L 144 48 L 156 48 L 168 48 L 180 48 L 192 48 L 204 48 L 216 48 L 228 48 L 240 48 L 252 48 L 264 48 L 276 48 L 288 48 L 300 48 L 312 48 L 324 48 L 336 48 L 348 48 L 360 48 L 372 48 L 384 48 L 396 48 L 408 48 L 420 48 L 432 48 L 444 48 L 456 48 L 468 48 L 480 48 L 492 48 L 504 48 L 516 48 L 528 48 L 540 48 L 552 48 L 564 48 L 576 48 L 588 48 L 600 48 L 612 48 L 624 48 L 624 60 L 612 60 L 600 60 L 588 60 L 576 60 L 564 60 L 552 60 L 540 60 L 528 60 L 516 60 L 504 60 L 492 60 L 480 60 L 468 60 L 456 60 L 444 60 L 432 60 L 420 60 L 408 60 L 396 60 L 384 60 L 372 60 L 360 60 L 348 60 L 336 60 L 324 60 L 312 60 L 300 60 L 288 60 L 276 60 L 264 60 L 252 60 L 240 60 L 228 60 L 216 60 L 204 60 L 192 60 L 180 60 L 168 60 L 156 60 L 144 60 L 132 60 L 120 60 L 108 60 L 96 60 L 84 60 L 72 60 L 60 60 L 48 60 L 36 60 L 24 60 L 12 60 L 0 60 L 0 72 L 12 72 L 24 72 L 36 72 L 48 72 L 60 72 L 72 72 L 84 72 L 96 72 L 108 72 L 120 72 L 132 72 L 144 72 L 156 72 L 168 72 L 180 72 L 192 72 L 192 60 L 204 60 L 216 60 L 216 72 L 228 72 L 240 72 L 252 72 L 264 72 L 276 72 L 288 72 L 300 72 L 312 72 L 324 72 L 336 72 L 348 72 L 360 72 L 372 72 L 384 72 L 396 72 L 408 72 L 420 72 L 432 72 L 444 72 L 456 72 L 468 72 L 480 72 L 492 72 L 504 72 L 516 72 L 528 72 L 540 72 L 552 72 L 564 72 L 576 72 L 588 72 L 600 72 L 612 72 L 624 72"
+        dur="60s"
+        repeatCount="indefinite"
+      />
+      <animate
+        attributeName="href"
+        values="#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-down;#cat-right;#cat-right;#cat-up;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-down;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-up;#cat-left;#cat-left;#cat-down;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-up;#cat-left;#cat-left;#cat-down;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-up;#cat-left;#cat-left;#cat-down;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-down;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-up;#cat-right;#cat-right;#cat-down;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-down;#cat-left;#cat-left;#cat-left;#cat-up;#cat-left;#cat-left;#cat-down;#cat-left;#cat-left;#cat-up;#cat-left;#cat-left;#cat-down;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-down;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-up;#cat-right;#cat-right;#cat-down;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-down;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-left;#cat-down;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-up;#cat-right;#cat-right;#cat-down;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right;#cat-right"
+        keyTimes="0;0.002583979328165375;0.00516795865633075;0.007751937984496124;0.0103359173126615;0.012919896640826873;0.015503875968992248;0.01808785529715762;0.020671834625323;0.023255813953488372;0.025839793281653745;0.028423772609819122;0.031007751937984496;0.03359173126614987;0.03617571059431524;0.03875968992248062;0.041343669250646;0.04392764857881137;0.046511627906976744;0.04909560723514212;0.05167958656330749;0.05426356589147287;0.056847545219638244;0.059431524547803614;0.06201550387596899;0.06459948320413436;0.06718346253229975;0.06976744186046512;0.07235142118863049;0.07493540051679587;0.07751937984496124;0.08010335917312661;0.082687338501292;0.08527131782945736;0.08785529715762273;0.09043927648578812;0.09302325581395349;0.09560723514211886;0.09819121447028424;0.10077519379844961;0.10335917312661498;0.10594315245478036;0.10852713178294573;0.1111111111111111;0.11369509043927649;0.11627906976744186;0.11886304909560723;0.12144702842377261;0.12403100775193798;0.12661498708010335;0.12919896640826872;0.13178294573643412;0.1343669250645995;0.13695090439276486;0.13953488372093023;0.1421188630490956;0.14470284237726097;0.14728682170542637;0.14987080103359174;0.1524547803617571;0.15503875968992248;0.15762273901808785;0.16020671834625322;0.16279069767441862;0.165374677002584;0.16795865633074936;0.17054263565891473;0.1731266149870801;0.17571059431524547;0.17829457364341086;0.18087855297157623;0.1834625322997416;0.18604651162790697;0.18863049095607234;0.19121447028423771;0.1937984496124031;0.19638242894056848;0.19896640826873385;0.20155038759689922;0.2041343669250646;0.20671834625322996;0.20930232558139536;0.21188630490956073;0.2144702842377261;0.21705426356589147;0.21963824289405684;0.2222222222222222;0.2248062015503876;0.22739018087855298;0.22997416020671835;0.23255813953488372;0.2351421188630491;0.23772609819121446;0.24031007751937986;0.24289405684754523;0.2454780361757106;0.24806201550387597;0.25064599483204136;0.2532299741602067;0.2558139534883721;0.25839793281653745;0.26098191214470284;0.26356589147286824;0.2661498708010336;0.268733850129199;0.2713178294573643;0.2739018087855297;0.27648578811369506;0.27906976744186046;0.28165374677002586;0.2842377260981912;0.2868217054263566;0.28940568475452194;0.29198966408268734;0.29457364341085274;0.2971576227390181;0.2997416020671835;0.3023255813953488;0.3049095607235142;0.30749354005167956;0.31007751937984496;0.31266149870801035;0.3152454780361757;0.3178294573643411;0.32041343669250644;0.32299741602067183;0.32558139534883723;0.3281653746770026;0.330749354005168;0.3333333333333333;0.3359173126614987;0.3385012919896641;0.34108527131782945;0.34366925064599485;0.3462532299741602;0.3488372093023256;0.35142118863049093;0.35400516795865633;0.35658914728682173;0.35917312661498707;0.36175710594315247;0.3643410852713178;0.3669250645994832;0.3695090439276486;0.37209302325581395;0.37467700258397935;0.3772609819121447;0.3798449612403101;0.38242894056847543;0.3850129198966408;0.3875968992248062;0.39018087855297157;0.39276485788113696;0.3953488372093023;0.3979328165374677;0.4005167958656331;0.40310077519379844;0.40568475452196384;0.4082687338501292;0.4108527131782946;0.4134366925064599;0.4160206718346253;0.4186046511627907;0.42118863049095606;0.42377260981912146;0.4263565891472868;0.4289405684754522;0.4315245478036176;0.43410852713178294;0.43669250645994834;0.4392764857881137;0.4418604651162791;0.4444444444444444;0.4470284237726098;0.4496124031007752;0.45219638242894056;0.45478036175710596;0.4573643410852713;0.4599483204134367;0.4625322997416021;0.46511627906976744;0.46770025839793283;0.4702842377260982;0.4728682170542636;0.4754521963824289;0.4780361757105943;0.4806201550387597;0.48320413436692505;0.48578811369509045;0.4883720930232558;0.4909560723514212;0.4935400516795866;0.49612403100775193;0.49870801033591733;0.5012919896640827;0.5038759689922481;0.5064599483204134;0.5090439276485789;0.5116279069767442;0.5142118863049095;0.5167958656330749;0.5193798449612403;0.5219638242894057;0.524547803617571;0.5271317829457365;0.5297157622739018;0.5322997416020672;0.5348837209302325;0.537467700258398;0.5400516795865633;0.5426356589147286;0.5452196382428941;0.5478036175710594;0.5503875968992248;0.5529715762273901;0.5555555555555556;0.5581395348837209;0.5607235142118863;0.5633074935400517;0.5658914728682171;0.5684754521963824;0.5710594315245479;0.5736434108527132;0.5762273901808785;0.5788113695090439;0.5813953488372093;0.5839793281653747;0.58656330749354;0.5891472868217055;0.5917312661498708;0.5943152454780362;0.5968992248062015;0.599483204134367;0.6020671834625323;0.6046511627906976;0.6072351421188631;0.6098191214470284;0.6124031007751938;0.6149870801033591;0.6175710594315246;0.6201550387596899;0.6227390180878553;0.6253229974160207;0.627906976744186;0.6304909560723514;0.6330749354005168;0.6356589147286822;0.6382428940568475;0.6408268733850129;0.6434108527131783;0.6459948320413437;0.648578811369509;0.6511627906976745;0.6537467700258398;0.6563307493540051;0.6589147286821705;0.661498708010336;0.6640826873385013;0.6666666666666666;0.6692506459948321;0.6718346253229974;0.6744186046511628;0.6770025839793282;0.6795865633074936;0.6821705426356589;0.6847545219638242;0.6873385012919897;0.689922480620155;0.6925064599483204;0.6950904392764858;0.6976744186046512;0.7002583979328165;0.7028423772609819;0.7054263565891473;0.7080103359173127;0.710594315245478;0.7131782945736435;0.7157622739018088;0.7183462532299741;0.7209302325581395;0.7235142118863049;0.7260981912144703;0.7286821705426356;0.7312661498708011;0.7338501291989664;0.7364341085271318;0.7390180878552972;0.7416020671834626;0.7441860465116279;0.7467700258397932;0.7493540051679587;0.751937984496124;0.7545219638242894;0.7571059431524548;0.7596899224806202;0.7622739018087855;0.7648578811369509;0.7674418604651163;0.7700258397932817;0.772609819121447;0.7751937984496124;0.7777777777777778;0.7803617571059431;0.7829457364341085;0.7855297157622739;0.7881136950904393;0.7906976744186046;0.7932816537467701;0.7958656330749354;0.7984496124031008;0.8010335917312662;0.8036175710594315;0.8062015503875969;0.8087855297157622;0.8113695090439277;0.813953488372093;0.8165374677002584;0.8191214470284238;0.8217054263565892;0.8242894056847545;0.8268733850129198;0.8294573643410853;0.8320413436692506;0.834625322997416;0.8372093023255814;0.8397932816537468;0.8423772609819121;0.8449612403100775;0.8475452196382429;0.8501291989664083;0.8527131782945736;0.8552971576227391;0.8578811369509044;0.8604651162790697;0.8630490956072352;0.8656330749354005;0.8682170542635659;0.8708010335917312;0.8733850129198967;0.875968992248062;0.8785529715762274;0.8811369509043928;0.8837209302325582;0.8863049095607235;0.8888888888888888;0.8914728682170543;0.8940568475452196;0.896640826873385;0.8992248062015504;0.9018087855297158;0.9043927648578811;0.9069767441860465;0.9095607235142119;0.9121447028423773;0.9147286821705426;0.917312661498708;0.9198966408268734;0.9224806201550387;0.9250645994832042;0.9276485788113695;0.9302325581395349;0.9328165374677002;0.9354005167958657;0.937984496124031;0.9405684754521964;0.9431524547803618;0.9457364341085271;0.9483204134366925;0.9509043927648578;0.9534883720930233;0.9560723514211886;0.958656330749354;0.9612403100775194;0.9638242894056848;0.9664082687338501;0.9689922480620154;0.9715762273901809;0.9741602067183462;0.9767441860465116;0.979328165374677;0.9819121447028424;0.9844961240310077;0.9870801033591732;0.9896640826873385;0.9922480620155039;0.9948320413436692;0.9974160206718347;1"
+        dur="60s"
+        repeatCount="indefinite"
+        calcMode="discrete"
+      />
+    </use>
   
 </svg>

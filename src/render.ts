@@ -8,7 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const CELL_SIZE = 12;
-const ANIMATION_DURATION = 10; // seconds
+const ANIMATION_DURATION = 60; // seconds
 
 export interface RenderOptions {
   path: Point[];
@@ -64,10 +64,10 @@ function loadGrassSprite(): string {
     const spritePath = path.join(__dirname, '../assets/grass-sprite.svg');
     const svgContent = fs.readFileSync(spritePath, 'utf8');
 
-    // Extract the g element with grass sprite
-    const spriteMatch = svgContent.match(/<g[^>]*id="grassSprite"[^>]*>[\s\S]*?<\/g>/);
-    if (spriteMatch) {
-      return `<symbol id="grassSprite" viewBox="0 0 24 24">${spriteMatch[0]}</symbol>`;
+    // Extract content inside g element with grass sprite
+    const spriteMatch = svgContent.match(/<g[^>]*id="grassSprite"[^>]*>([\s\S]*?)<\/g>/);
+    if (spriteMatch && spriteMatch[1]) {
+      return `<symbol id="grassSprite" viewBox="0 0 24 24">${spriteMatch[1]}</symbol>`;
     }
   } catch (error) {
     console.warn('Failed to load grass sprite, using fallback');
@@ -87,10 +87,10 @@ function loadGrassWithFlowersSprite(): string {
     const spritePath = path.join(__dirname, '../assets/grass-with-flowers-sprite.svg');
     const svgContent = fs.readFileSync(spritePath, 'utf8');
 
-    // Extract the g element with grass with flowers sprite
-    const spriteMatch = svgContent.match(/<g[^>]*id="grassWithFlowersSprite"[^>]*>[\s\S]*?<\/g>/);
-    if (spriteMatch) {
-      return `<symbol id="grassWithFlowersSprite" viewBox="0 0 24 24">${spriteMatch[0]}</symbol>`;
+    // Extract content inside g element with grass with flowers sprite
+    const spriteMatch = svgContent.match(/<g[^>]*id="grassWithFlowersSprite"[^>]*>([\s\S]*?)<\/g>/);
+    if (spriteMatch && spriteMatch[1]) {
+      return `<symbol id="grassWithFlowersSprite" viewBox="0 0 24 24">${spriteMatch[1]}</symbol>`;
     }
   } catch (error) {
     console.warn('Failed to load grass with flowers sprite, using fallback');
@@ -110,10 +110,10 @@ function loadRockSprite(): string {
     const spritePath = path.join(__dirname, '../assets/rock-sprite.svg');
     const svgContent = fs.readFileSync(spritePath, 'utf8');
 
-    // Extract the g element with rock sprite
-    const spriteMatch = svgContent.match(/<g[^>]*id="rockSprite"[^>]*>[\s\S]*?<\/g>/);
-    if (spriteMatch) {
-      return `<symbol id="rockSprite" viewBox="0 0 24 24">${spriteMatch[0]}</symbol>`;
+    // Extract content inside g element with rock sprite
+    const spriteMatch = svgContent.match(/<g[^>]*id="rockSprite"[^>]*>([\s\S]*?)<\/g>/);
+    if (spriteMatch && spriteMatch[1]) {
+      return `<symbol id="rockSprite" viewBox="0 0 24 24">${spriteMatch[1]}</symbol>`;
     }
   } catch (error) {
     console.warn('Failed to load rock sprite, using fallback');
@@ -127,17 +127,48 @@ function loadRockSprite(): string {
   </symbol>`;
 }
 
+function loadCatSprites(): string {
+  const directions = ['right', 'left', 'up', 'down'];
+  let sprites = '';
+
+  for (const dir of directions) {
+    try {
+      const spritePath = path.join(__dirname, `../assets/cat-${dir}.svg`);
+      const svgContent = fs.readFileSync(spritePath, 'utf8');
+
+      // Extract content between <svg> tags
+      const svgMatch = svgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
+      if (svgMatch && svgMatch[1]) {
+        const symbolId = `cat-${dir}`;
+        sprites += `<symbol id="${symbolId}" viewBox="0 0 24 24">${svgMatch[1]}</symbol>\n`;
+      }
+    } catch (error) {
+      console.warn(`Failed to load cat-${dir} sprite, using fallback`);
+      // Fallback cat sprite
+      sprites += `<symbol id="cat-${dir}" viewBox="0 0 24 24">
+        <rect x="10" y="12" width="4" height="6" fill="#1A1A1A"/>
+        <rect x="11" y="18" width="1" height="2" fill="#1A1A1A"/>
+        <rect x="12" y="18" width="1" height="2" fill="#1A1A1A"/>
+      </symbol>\n`;
+    }
+  }
+
+  return sprites;
+}
+
 function getSpriteDefs(): string {
   const defaultTileTexture = loadDefaultTileTexture();
   const grassSprite = loadGrassSprite();
   const grassWithFlowersSprite = loadGrassWithFlowersSprite();
   const rockSprite = loadRockSprite();
+  const catSprites = loadCatSprites();
 
   return `
     ${defaultTileTexture}
     ${grassSprite}
     ${grassWithFlowersSprite}
     ${rockSprite}
+    ${catSprites}
 
     <!-- Dog sprite -->
     <symbol id="dog" viewBox="0 0 24 24">
@@ -233,64 +264,90 @@ function renderTile(type: TileType, x: number, y: number, gridX: number, gridY: 
 function renderPawPrints(path: Point[], currentPosition: number): string {
   if (path.length === 0) return '';
 
-  let pawPrints = '';
-  const endIndex = currentPosition >= 0 ? Math.min(currentPosition, path.length - 1) : path.length - 1;
+  // Only show paw print at the last position (current position of the cat)
+  const lastPoint = path[path.length - 1];
+  const x = lastPoint.x * CELL_SIZE;
+  const y = lastPoint.y * CELL_SIZE;
 
-  for (let i = 0; i < endIndex; i++) {
-    const point = path[i];
-    const x = point.x * CELL_SIZE;
-    const y = point.y * CELL_SIZE;
+  return `<use href="#paw" x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}"/>`;
+}
 
-    pawPrints += `<use href="#paw" x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}"/>`;
+function getDirection(from: Point, to: Point): string {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+
+  if (Math.abs(dx) > Math.abs(dy)) {
+    return dx > 0 ? 'right' : 'left';
+  } else {
+    return dy > 0 ? 'down' : 'up';
   }
-
-  return pawPrints;
 }
 
 function renderDog(path: Point[], animate: boolean): string {
   if (path.length === 0) {
     // Default position at (0, 0)
-    return `<use href="#dog" x="0" y="0" width="${CELL_SIZE}" height="${CELL_SIZE}"/>`;
+    return `<use href="#cat-down" x="0" y="0" width="${CELL_SIZE}" height="${CELL_SIZE}"/>`;
   }
 
-  if (!animate) {
-    // Static dog at the last position
+  if (!animate || path.length === 1) {
+    // Static cat at the last position
     const lastPoint = path[path.length - 1];
     const x = lastPoint.x * CELL_SIZE;
     const y = lastPoint.y * CELL_SIZE;
-    return `<use href="#dog" x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}"/>`;
-  }
 
-  // Animated dog
-  let pathData = 'M';
-  let keyTimes: number[] = [];
-
-  for (let i = 0; i < path.length; i++) {
-    const point = path[i];
-    const x = point.x * CELL_SIZE + CELL_SIZE / 2;
-    const y = point.y * CELL_SIZE + CELL_SIZE / 2;
-
-    if (i === 0) {
-      pathData += `${x},${y}`;
-    } else {
-      pathData += ` L${x},${y}`;
+    // Determine direction from second to last point
+    let direction = 'down';
+    if (path.length > 1) {
+      direction = getDirection(path[path.length - 2], lastPoint);
     }
 
-    keyTimes.push(i / (path.length - 1));
+    return `<use href="#cat-${direction}" x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}"/>`;
+  }
+
+  // Single cat moving along the entire path
+  const firstPoint = path[0];
+  const lastPoint = path[path.length - 1];
+
+  // Build path string for animateMotion
+  let pathString = `M ${firstPoint.x * CELL_SIZE} ${firstPoint.y * CELL_SIZE}`;
+  for (let i = 1; i < path.length; i++) {
+    pathString += ` L ${path[i].x * CELL_SIZE} ${path[i].y * CELL_SIZE}`;
+  }
+
+  // Determine initial direction
+  let initialDirection = 'down';
+  if (path.length > 1) {
+    initialDirection = getDirection(path[0], path[1]);
+  }
+
+  // Create keyframes for direction changes
+  let directionKeyTimes = '0';
+  let directionValues = `#cat-${initialDirection}`;
+
+  if (path.length > 1) {
+    for (let i = 1; i < path.length; i++) {
+      const keyTime = i / (path.length - 1);
+      const direction = getDirection(path[i - 1], path[i]);
+      directionKeyTimes += `;${keyTime}`;
+      directionValues += `;#cat-${direction}`;
+    }
   }
 
   return `
-    <g>
-      <use href="#dog" width="${CELL_SIZE}" height="${CELL_SIZE}">
-        <animateMotion
-          dur="${ANIMATION_DURATION}s"
-          repeatCount="indefinite"
-          path="${pathData}"
-          rotate="0"
-          keyTimes="${keyTimes.join(';')}"
-          keyPoints="${keyTimes.join(';')}"
-        />
-      </use>
-    </g>
+    <use href="#cat-${initialDirection}" x="0" y="0" width="${CELL_SIZE}" height="${CELL_SIZE}">
+      <animateMotion
+        path="${pathString}"
+        dur="${ANIMATION_DURATION}s"
+        repeatCount="indefinite"
+      />
+      <animate
+        attributeName="href"
+        values="${directionValues}"
+        keyTimes="${directionKeyTimes}"
+        dur="${ANIMATION_DURATION}s"
+        repeatCount="indefinite"
+        calcMode="discrete"
+      />
+    </use>
   `;
 }

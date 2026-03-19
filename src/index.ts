@@ -7,7 +7,7 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { fetchContributions } from './fetch';
 import { parseContributions } from './parser';
-import { createGameMap } from './map';
+import { createGameMap, GameMap, TileType } from './map';
 import { findPath, findNearestTreasure } from './pathfinding';
 import { renderSVG } from './render';
 
@@ -86,13 +86,52 @@ async function run(): Promise<void> {
   }
 }
 
-function createDefaultPath(map: { width: number; height: number }): { x: number; y: number }[] {
+export function createDefaultPath(gameMap: GameMap): { x: number; y: number }[] {
   const path: { x: number; y: number }[] = [];
-  const y = Math.floor(map.height / 2);
 
-  // Walk from left to right
-  for (let x = 0; x < map.width; x++) {
-    path.push({ x, y });
+  // Zigzag pattern to cover all tiles
+  for (let y = 0; y < gameMap.height; y++) {
+    const leftToRight = y % 2 === 0;
+    const startX = leftToRight ? 0 : gameMap.width - 1;
+    const endX = leftToRight ? gameMap.width : -1;
+    const step = leftToRight ? 1 : -1;
+
+    for (let x = startX; x !== endX; x += step) {
+      const tile = gameMap.tiles[y][x];
+      const targetPoint = { x, y };
+
+      if (tile.hasRock) {
+        // Rock - skip it, A* will route around when needed
+        continue;
+      }
+
+      // Walkable tile
+      if (path.length === 0) {
+        // First tile
+        path.push(targetPoint);
+      } else {
+        const lastPoint = path[path.length - 1];
+
+        // Check if adjacent (only up/down/left/right, no diagonal)
+        const dx = Math.abs(lastPoint.x - x);
+        const dy = Math.abs(lastPoint.y - y);
+
+        if (dx + dy === 1) {
+          // Adjacent, just add it
+          path.push(targetPoint);
+        } else {
+          // Not adjacent, use A* to find path around obstacles
+          const connectingPath = findPath(gameMap, lastPoint, targetPoint);
+          if (connectingPath.length > 1) {
+            // Add connecting path (excluding first point as it's already in path)
+            path.push(...connectingPath.slice(1));
+          } else {
+            // No path found, just add the point anyway
+            path.push(targetPoint);
+          }
+        }
+      }
+    }
   }
 
   return path;

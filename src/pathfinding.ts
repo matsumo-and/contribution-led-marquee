@@ -118,7 +118,7 @@ function getNeighbors(node: Node, map: GameMap): Point[] {
     const x = node.x + dir.x;
     const y = node.y + dir.y;
 
-    if (isValidPoint({ x, y }, map) && isWalkable(map.tiles[y][x].type)) {
+    if (isValidPoint({ x, y }, map) && isWalkable(map.tiles[y][x])) {
       neighbors.push({ x, y });
     }
   }
@@ -126,8 +126,12 @@ function getNeighbors(node: Node, map: GameMap): Point[] {
   return neighbors;
 }
 
-function isWalkable(tileType: TileType): boolean {
-  // All tiles are walkable in our game
+function isWalkable(tile: { type: TileType; hasRock: boolean }): boolean {
+  // Tiles with rocks are not walkable
+  if (tile.hasRock) {
+    return false;
+  }
+  // All other tiles are walkable
   return true;
 }
 

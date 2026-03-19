@@ -16,6 +16,7 @@ export interface Tile {
   x: number;
   y: number;
   contributions: number;
+  hasRock: boolean; // Only for EMPTY tiles - randomly placed rocks
 }
 
 export interface GameMap {
@@ -36,11 +37,21 @@ export function createGameMap(grid: ContributionGrid): GameMap {
       const contributions = cell ? cell.count : 0;
       const type = getTileType(contributions);
 
+      // Determine if this tile has a rock (only for EMPTY tiles)
+      // Use deterministic random based on position (same logic as render.ts)
+      let hasRock = false;
+      if (type === TileType.EMPTY) {
+        const seed = x * 1000 + y;
+        const random = Math.abs(Math.sin(seed) * 10000) % 100;
+        hasRock = random < 5; // 5% chance to have a rock
+      }
+
       const tile: Tile = {
         type,
         x,
         y,
-        contributions
+        contributions,
+        hasRock
       };
 
       row.push(tile);
