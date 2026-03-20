@@ -8,6 +8,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 const CELL_SIZE = 12;
+const CAT_SIZE = CELL_SIZE * 2; // Cat sprite size (2x cell size for better visibility)
 const ANIMATION_DURATION = 60; // seconds
 
 export interface RenderOptions {
@@ -129,27 +130,44 @@ function loadRockSprite(): string {
 
 function loadCatSprites(): string {
   const directions = ['right', 'left', 'up', 'down'];
+  const frames = [1, 2];
   let sprites = '';
 
   for (const dir of directions) {
-    try {
-      const spritePath = path.join(__dirname, `../assets/cat-${dir}.svg`);
-      const svgContent = fs.readFileSync(spritePath, 'utf8');
+    for (const frame of frames) {
+      try {
+        const spritePath = path.join(__dirname, `../assets/cat-${dir}-${frame}.svg`);
+        const svgContent = fs.readFileSync(spritePath, 'utf8');
 
-      // Extract content between <svg> tags
-      const svgMatch = svgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
-      if (svgMatch && svgMatch[1]) {
-        const symbolId = `cat-${dir}`;
-        sprites += `<symbol id="${symbolId}" viewBox="0 0 24 24">${svgMatch[1]}</symbol>\n`;
+        // Extract content between <svg> tags
+        const svgMatch = svgContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
+        if (svgMatch && svgMatch[1]) {
+          const symbolId = `cat-${dir}-${frame}`;
+          sprites += `<symbol id="${symbolId}" viewBox="0 0 24 24">${svgMatch[1]}</symbol>\n`;
+        }
+      } catch (error) {
+        console.warn(`Failed to load cat-${dir}-${frame} sprite, using fallback`);
+
+        // Try to fall back to old cat-{dir}.svg for frame 1
+        if (frame === 1) {
+          try {
+            const oldPath = path.join(__dirname, `../assets/cat-${dir}.svg`);
+            const oldContent = fs.readFileSync(oldPath, 'utf8');
+            const match = oldContent.match(/<svg[^>]*>([\s\S]*?)<\/svg>/);
+            if (match && match[1]) {
+              sprites += `<symbol id="cat-${dir}-${frame}" viewBox="0 0 24 24">${match[1]}</symbol>\n`;
+              continue;
+            }
+          } catch {}
+        }
+
+        // Ultimate fallback: minimal cat sprite
+        sprites += `<symbol id="cat-${dir}-${frame}" viewBox="0 0 24 24">
+          <rect x="10" y="12" width="4" height="6" fill="#1A1A1A"/>
+          <rect x="11" y="18" width="1" height="2" fill="#1A1A1A"/>
+          <rect x="12" y="18" width="1" height="2" fill="#1A1A1A"/>
+        </symbol>\n`;
       }
-    } catch (error) {
-      console.warn(`Failed to load cat-${dir} sprite, using fallback`);
-      // Fallback cat sprite
-      sprites += `<symbol id="cat-${dir}" viewBox="0 0 24 24">
-        <rect x="10" y="12" width="4" height="6" fill="#1A1A1A"/>
-        <rect x="11" y="18" width="1" height="2" fill="#1A1A1A"/>
-        <rect x="12" y="18" width="1" height="2" fill="#1A1A1A"/>
-      </symbol>\n`;
     }
   }
 
@@ -284,16 +302,20 @@ function getDirection(from: Point, to: Point): string {
 }
 
 function renderDog(path: Point[], animate: boolean): string {
+  // Offset to position the cat on the cell
+  const offsetX = (CAT_SIZE - CELL_SIZE) / 2;
+  const offsetY = (CAT_SIZE - CELL_SIZE) / 2 + 3; // Shift up so feet stay within cell
+
   if (path.length === 0) {
     // Default position at (0, 0)
-    return `<use href="#cat-down" x="0" y="0" width="${CELL_SIZE}" height="${CELL_SIZE}"/>`;
+    return `<use href="#cat-down-1" x="${-offsetX}" y="${-offsetY}" width="${CAT_SIZE}" height="${CAT_SIZE}"/>`;
   }
 
   if (!animate || path.length === 1) {
-    // Static cat at the last position
+    // Static cat at the last position (always use frame 1)
     const lastPoint = path[path.length - 1];
-    const x = lastPoint.x * CELL_SIZE;
-    const y = lastPoint.y * CELL_SIZE;
+    const x = lastPoint.x * CELL_SIZE - offsetX;
+    const y = lastPoint.y * CELL_SIZE - offsetY;
 
     // Determine direction from second to last point
     let direction = 'down';
@@ -301,17 +323,16 @@ function renderDog(path: Point[], animate: boolean): string {
       direction = getDirection(path[path.length - 2], lastPoint);
     }
 
-    return `<use href="#cat-${direction}" x="${x}" y="${y}" width="${CELL_SIZE}" height="${CELL_SIZE}"/>`;
+    return `<use href="#cat-${direction}-1" x="${x}" y="${y}" width="${CAT_SIZE}" height="${CAT_SIZE}"/>`;
   }
 
-  // Single cat moving along the entire path
+  // Single cat moving along the entire path with frame animation
   const firstPoint = path[0];
-  const lastPoint = path[path.length - 1];
 
-  // Build path string for animateMotion
-  let pathString = `M ${firstPoint.x * CELL_SIZE} ${firstPoint.y * CELL_SIZE}`;
+  // Build path string for animateMotion (centered on cells)
+  let pathString = `M ${firstPoint.x * CELL_SIZE - offsetX} ${firstPoint.y * CELL_SIZE - offsetY}`;
   for (let i = 1; i < path.length; i++) {
-    pathString += ` L ${path[i].x * CELL_SIZE} ${path[i].y * CELL_SIZE}`;
+    pathString += ` L ${path[i].x * CELL_SIZE - offsetX} ${path[i].y * CELL_SIZE - offsetY}`;
   }
 
   // Determine initial direction
@@ -320,21 +341,53 @@ function renderDog(path: Point[], animate: boolean): string {
     initialDirection = getDirection(path[0], path[1]);
   }
 
-  // Create keyframes for direction changes
-  let directionKeyTimes = '0';
-  let directionValues = `#cat-${initialDirection}`;
+  // Build combined direction + frame animation
+  // Use segment-based approach: change direction at the START of each segment
+  const frameInterval = 0.5; // seconds per frame
 
-  if (path.length > 1) {
-    for (let i = 1; i < path.length; i++) {
-      const keyTime = i / (path.length - 1);
-      const direction = getDirection(path[i - 1], path[i]);
-      directionKeyTimes += `;${keyTime}`;
-      directionValues += `;#cat-${direction}`;
+  const animValues: string[] = [];
+  const animKeyTimes: string[] = [];
+
+  // Process each segment
+  for (let segmentIndex = 0; segmentIndex < path.length - 1; segmentIndex++) {
+    const segmentStartTime = (segmentIndex / (path.length - 1)) * ANIMATION_DURATION;
+    const segmentEndTime = ((segmentIndex + 1) / (path.length - 1)) * ANIMATION_DURATION;
+    const segmentDuration = segmentEndTime - segmentStartTime;
+
+    // Direction for this segment (from current point to next point)
+    const direction = getDirection(path[segmentIndex], path[segmentIndex + 1]);
+
+    // Calculate number of frames in this segment
+    const framesInSegment = Math.max(1, Math.ceil(segmentDuration / frameInterval));
+
+    // Add frames for this segment
+    for (let frameIdx = 0; frameIdx < framesInSegment; frameIdx++) {
+      const frame = (frameIdx % 2) + 1; // Alternate 1, 2
+      const frameTime = segmentStartTime + (frameIdx * frameInterval);
+
+      // Don't exceed segment end time
+      if (frameTime >= segmentEndTime && segmentIndex < path.length - 2) {
+        break;
+      }
+
+      const normalizedTime = Math.min(frameTime / ANIMATION_DURATION, 1.0);
+
+      animValues.push(`#cat-${direction}-${frame}`);
+      animKeyTimes.push(normalizedTime.toFixed(6));
     }
   }
 
+  // Ensure we end at time 1.0
+  if (parseFloat(animKeyTimes[animKeyTimes.length - 1]) < 1.0) {
+    const lastSegmentIndex = path.length - 2;
+    const lastDirection = getDirection(path[lastSegmentIndex], path[lastSegmentIndex + 1]);
+    const lastFrame = (animValues.length % 2) + 1;
+    animValues.push(`#cat-${lastDirection}-${lastFrame}`);
+    animKeyTimes.push('1.0');
+  }
+
   return `
-    <use href="#cat-${initialDirection}" x="0" y="0" width="${CELL_SIZE}" height="${CELL_SIZE}">
+    <use href="#cat-${initialDirection}-1" x="0" y="0" width="${CAT_SIZE}" height="${CAT_SIZE}">
       <animateMotion
         path="${pathString}"
         dur="${ANIMATION_DURATION}s"
@@ -342,8 +395,8 @@ function renderDog(path: Point[], animate: boolean): string {
       />
       <animate
         attributeName="href"
-        values="${directionValues}"
-        keyTimes="${directionKeyTimes}"
+        values="${animValues.join(';')}"
+        keyTimes="${animKeyTimes.join(';')}"
         dur="${ANIMATION_DURATION}s"
         repeatCount="indefinite"
         calcMode="discrete"

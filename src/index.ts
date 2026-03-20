@@ -89,48 +89,140 @@ async function run(): Promise<void> {
 export function createDefaultPath(gameMap: GameMap): { x: number; y: number }[] {
   const path: { x: number; y: number }[] = [];
 
-  // Zigzag pattern to cover all tiles
-  for (let y = 0; y < gameMap.height; y++) {
-    const leftToRight = y % 2 === 0;
-    const startX = leftToRight ? 0 : gameMap.width - 1;
-    const endX = leftToRight ? gameMap.width : -1;
-    const step = leftToRight ? 1 : -1;
+  // Start from top-left
+  const start = { x: 0, y: 0 };
+  const goal = { x: gameMap.width - 1, y: gameMap.height - 1 };
 
-    for (let x = startX; x !== endX; x += step) {
-      const tile = gameMap.tiles[y][x];
-      const targetPoint = { x, y };
-
-      if (tile.hasRock) {
-        // Rock - skip it, A* will route around when needed
-        continue;
-      }
-
-      // Walkable tile
-      if (path.length === 0) {
-        // First tile
-        path.push(targetPoint);
-      } else {
-        const lastPoint = path[path.length - 1];
-
-        // Check if adjacent (only up/down/left/right, no diagonal)
-        const dx = Math.abs(lastPoint.x - x);
-        const dy = Math.abs(lastPoint.y - y);
-
-        if (dx + dy === 1) {
-          // Adjacent, just add it
-          path.push(targetPoint);
-        } else {
-          // Not adjacent, use A* to find path around obstacles
-          const connectingPath = findPath(gameMap, lastPoint, targetPoint);
-          if (connectingPath.length > 1) {
-            // Add connecting path (excluding first point as it's already in path)
-            path.push(...connectingPath.slice(1));
-          } else {
-            // No path found, just add the point anyway
-            path.push(targetPoint);
-          }
+  // Skip if start or goal has a rock
+  if (gameMap.tiles[start.y][start.x].hasRock) {
+    // Find first walkable tile
+    for (let y = 0; y < gameMap.height; y++) {
+      for (let x = 0; x < gameMap.width; x++) {
+        if (!gameMap.tiles[y][x].hasRock) {
+          start.x = x;
+          start.y = y;
+          break;
         }
       }
+      if (!gameMap.tiles[start.y][start.x].hasRock) break;
+    }
+  }
+
+  let current = { ...start };
+  path.push(current);
+
+  // Track visited tiles
+  const visited = new Set<string>();
+  visited.add(`${current.x},${current.y}`);
+
+  // Deterministic random seed
+  let seed = 12345;
+  const random = () => {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  };
+
+  const maxSteps = gameMap.width * gameMap.height * 3; // Prevent infinite loop
+  let steps = 0;
+
+  // Random walk with bias towards goal
+  while ((current.x !== goal.x || current.y !== goal.y) && steps < maxSteps) {
+    steps++;
+
+    // Get possible moves
+    const directions = [
+      { x: 0, y: -1, name: 'up' },    // Up
+      { x: 1, y: 0, name: 'right' },  // Right
+      { x: 0, y: 1, name: 'down' },   // Down
+      { x: -1, y: 0, name: 'left' }   // Left
+    ];
+
+    // Calculate weights based on distance to goal
+    const weights = directions.map(dir => {
+      const nextX = current.x + dir.x;
+      const nextY = current.y + dir.y;
+
+      // Out of bounds
+      if (nextX < 0 || nextX >= gameMap.width || nextY < 0 || nextY >= gameMap.height) {
+        return 0;
+      }
+
+      // Has rock
+      if (gameMap.tiles[nextY][nextX].hasRock) {
+        return 0;
+      }
+
+      // Already visited - avoid unless necessary
+      const isVisited = visited.has(`${nextX},${nextY}`);
+
+      // Calculate distance to goal (Manhattan)
+      const distToGoal = Math.abs(goal.x - nextX) + Math.abs(goal.y - nextY);
+      const currentDistToGoal = Math.abs(goal.x - current.x) + Math.abs(goal.y - current.y);
+
+      let weight = 0;
+
+      // Prefer moves that get closer to goal
+      if (distToGoal < currentDistToGoal) {
+        weight = 1.25; // High weight for moves towards goal
+      } else if (distToGoal === currentDistToGoal) {
+        weight = 1; // Medium weight for moves that maintain distance
+      } else {
+        weight = 0.75; // Low weight for moves away from goal
+      }
+
+      // Penalize visited tiles heavily
+      if (isVisited) {
+        weight *= 0.1; // 90% penalty for already visited
+      }
+
+      return weight;
+    });
+
+    const totalWeight = weights.reduce((sum, w) => sum + w, 0 as number);
+
+    // No valid moves - try to use A* to find path to goal
+    if (totalWeight === 0) {
+      const pathToGoal = findPath(gameMap, current, goal);
+      if (pathToGoal.length > 1) {
+        // Add to path and mark as visited
+        for (let i = 1; i < pathToGoal.length; i++) {
+          const p = pathToGoal[i];
+          path.push(p);
+          visited.add(`${p.x},${p.y}`);
+        }
+        break;
+      } else {
+        // Stuck
+        break;
+      }
+    }
+
+    // Pick random direction based on weights
+    let r = random() * totalWeight;
+    let selectedDir = directions[0];
+
+    for (let i = 0; i < directions.length; i++) {
+      r -= weights[i];
+      if (r <= 0) {
+        selectedDir = directions[i];
+        break;
+      }
+    }
+
+    current = {
+      x: current.x + selectedDir.x,
+      y: current.y + selectedDir.y
+    };
+
+    path.push({ ...current });
+    visited.add(`${current.x},${current.y}`);
+  }
+
+  // If we didn't reach the goal, try using A* for final segment
+  if (current.x !== goal.x || current.y !== goal.y) {
+    const finalPath = findPath(gameMap, current, goal);
+    if (finalPath.length > 1) {
+      path.push(...finalPath.slice(1));
     }
   }
 
