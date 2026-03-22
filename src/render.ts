@@ -1,5 +1,5 @@
 /**
- * Renders the game map as an SVG with tiles, dog, and paw prints
+ * Renders the game map as an SVG with tiles, cat, and paw prints
  */
 
 import { GameMap, TileType } from './map';
@@ -33,8 +33,8 @@ export function renderSVG(map: GameMap, options: RenderOptions): string {
   <!-- Paw prints -->
   ${renderPawPrints(options.path, options.currentPosition)}
 
-  <!-- Dog -->
-  ${renderDog(options.path, options.animate)}
+  <!-- Cat -->
+  ${renderCat(options.path, options.animate)}
 </svg>`;
 
   return svg;
@@ -188,8 +188,8 @@ function getSpriteDefs(): string {
     ${rockSprite}
     ${catSprites}
 
-    <!-- Dog sprite -->
-    <symbol id="dog" viewBox="0 0 24 24">
+    <!-- Cat sprite -->
+    <symbol id="cat" viewBox="0 0 24 24">
       <!-- Body -->
       <rect x="6" y="10" width="12" height="8" fill="#8B4513"/>
       <!-- Head -->
@@ -301,7 +301,7 @@ function getDirection(from: Point, to: Point): string {
   }
 }
 
-function renderDog(path: Point[], animate: boolean): string {
+function renderCat(path: Point[], animate: boolean): string {
   // Offset to position the cat on the cell
   const offsetX = (CAT_SIZE - CELL_SIZE) / 2;
   const offsetY = (CAT_SIZE - CELL_SIZE) / 2 + 3; // Shift up so feet stay within cell

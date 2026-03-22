@@ -1,5 +1,5 @@
 /**
- * Main entry point for the Dog RPG GitHub Action
+ * Main entry point for the Cat RPG GitHub Action
  */
 
 import * as core from '@actions/core';
@@ -15,7 +15,7 @@ async function run(): Promise<void> {
   try {
     // Get inputs
     const githubUserName = core.getInput('github_user_name', { required: true });
-    const outputPath = core.getInput('output_path') || 'dist/dog-rpg.svg';
+    const outputPath = core.getInput('output_path') || 'dist/cat-rpg.svg';
     const animate = core.getBooleanInput('animate') || true;
 
     console.log(`Fetching contribution data for ${githubUserName}...`);
@@ -35,8 +35,8 @@ async function run(): Promise<void> {
 
     console.log(`Found ${gameMap.treasures.length} treasure tiles`);
 
-    // Determine dog's path
-    let dogPath: { x: number; y: number }[] = [];
+    // Determine cat's path
+    let catPath: { x: number; y: number }[] = [];
 
     // Start position (leftmost column, middle row)
     const startX = 0;
@@ -49,22 +49,22 @@ async function run(): Promise<void> {
 
       if (nearestTreasure) {
         console.log(`Finding path from (${start.x}, ${start.y}) to treasure at (${nearestTreasure.x}, ${nearestTreasure.y})`);
-        dogPath = findPath(gameMap, start, nearestTreasure);
+        catPath = findPath(gameMap, start, nearestTreasure);
       }
     }
 
     // If no path to treasure or no treasures, create a simple path across the map
-    if (dogPath.length === 0) {
+    if (catPath.length === 0) {
       console.log('No treasures found or path blocked, creating default path');
-      dogPath = createDefaultPath(gameMap);
+      catPath = createDefaultPath(gameMap);
     }
 
-    console.log(`Path length: ${dogPath.length}`);
+    console.log(`Path length: ${catPath.length}`);
 
     // Render SVG
     const svg = renderSVG(gameMap, {
-      path: dogPath,
-      currentPosition: dogPath.length - 1,
+      path: catPath,
+      currentPosition: catPath.length - 1,
       animate
     });
 

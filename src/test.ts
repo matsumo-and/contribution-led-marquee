@@ -101,16 +101,16 @@ async function generateTestSVG() {
   const gameMap = createGameMap(testGrid);
   console.log(`Found ${gameMap.treasures.length} treasure tiles`);
 
-  // Determine dog's path - use default random walk path
-  const dogPath = createDefaultPath(gameMap);
+  // Determine cat's path - use default random walk path
+  const catPath = createDefaultPath(gameMap);
 
-  console.log(`Path length: ${dogPath.length}`);
-  console.log(`Path points: ${dogPath.map(p => `(${p.x},${p.y})`).join(' -> ')}`);
+  console.log(`Path length: ${catPath.length}`);
+  console.log(`Path points: ${catPath.map(p => `(${p.x},${p.y})`).join(' -> ')}`);
 
   // Render SVG with animation
   const svg = renderSVG(gameMap, {
-    path: dogPath,
-    currentPosition: dogPath.length - 1,
+    path: catPath,
+    currentPosition: catPath.length - 1,
     animate: true
   });
 
@@ -118,18 +118,18 @@ async function generateTestSVG() {
   await fs.mkdir('dist', { recursive: true });
 
   // Write SVG file
-  await fs.writeFile('dist/dog-rpg-test.svg', svg, 'utf8');
-  console.log('Test SVG generated at dist/dog-rpg-test.svg');
+  await fs.writeFile('dist/cat-rpg-test.svg', svg, 'utf8');
+  console.log('Test SVG generated at dist/cat-rpg-test.svg');
 
   // Also generate a static version
   const svgStatic = renderSVG(gameMap, {
-    path: dogPath,
-    currentPosition: dogPath.length - 1,
+    path: catPath,
+    currentPosition: catPath.length - 1,
     animate: false
   });
 
-  await fs.writeFile('dist/dog-rpg-test-static.svg', svgStatic, 'utf8');
-  console.log('Static SVG generated at dist/dog-rpg-test-static.svg');
+  await fs.writeFile('dist/cat-rpg-test-static.svg', svgStatic, 'utf8');
+  console.log('Static SVG generated at dist/cat-rpg-test-static.svg');
 }
 
 // Run the test

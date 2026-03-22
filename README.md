@@ -1,29 +1,29 @@
-# Dog RPG GitHub Action
+# Cat RPG GitHub Action
 
-Generate a pixel RPG visualization of your GitHub contributions with a dog character walking across the map!
+Generate a pixel RPG visualization of your GitHub contributions with a cat character walking across the map!
 
 ## Features
 
 - Converts GitHub contribution graph into an RPG-style tile map
-- Animated dog character that walks toward treasure tiles
+- Animated cat character that walks toward treasure tiles
 - Different tile types based on contribution count:
   - 0 contributions → Grass
   - 1 contribution → Flower
   - 2 contributions → Rock
   - 3 contributions → Tree
   - 4+ contributions → Treasure
-- A* pathfinding for intelligent dog movement
-- Paw prints showing the dog's trail
+- A* pathfinding for intelligent cat movement
+- Paw prints showing the cat's trail
 - Pure SVG output (no external images)
 
 ## Usage
 
 ### In a GitHub Workflow
 
-Create `.github/workflows/dog-rpg.yml`:
+Create `.github/workflows/cat-rpg.yml`:
 
 ```yaml
-name: Generate Dog RPG Visualization
+name: Generate Cat RPG Visualization
 
 on:
   schedule:
@@ -39,18 +39,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate Dog RPG SVG
-        uses: yourusername/dog-rpg-action@v1
+      - name: Generate Cat RPG SVG
+        uses: yourusername/cat-rpg-action@v1
         with:
           github_user_name: ${{ github.repository_owner }}
-          output_path: 'dog-rpg.svg'
+          output_path: 'cat-rpg.svg'
 
       - name: Commit SVG
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git add dog-rpg.svg
-          git commit -m "Update Dog RPG visualization" || echo "No changes"
+          git add cat-rpg.svg
+          git commit -m "Update Cat RPG visualization" || echo "No changes"
           git push
 ```
 
@@ -59,9 +59,9 @@ jobs:
 Add to your profile README.md:
 
 ```markdown
-## My GitHub Journey 🐕
+## My GitHub Journey 🐱
 
-![Dog RPG](./dog-rpg.svg)
+![Cat RPG](./cat-rpg.svg)
 ```
 
 ## Development
@@ -92,12 +92,12 @@ npm run dev
 ## Project Structure
 
 ```
-dog-rpg-action/
+cat-rpg-action/
 ├── src/
 │   ├── fetch.ts       # Fetches GitHub contribution data
 │   ├── parser.ts      # Parses HTML to extract contribution grid
 │   ├── map.ts         # Converts contributions to tile types
-│   ├── pathfinding.ts # A* algorithm for dog movement
+│   ├── pathfinding.ts # A* algorithm for cat movement
 │   ├── render.ts      # SVG generation with sprites
 │   └── index.ts       # Main entry point
 ├── dist/              # Compiled JavaScript
@@ -122,17 +122,17 @@ function getTileType(contributions: number): TileType {
 }
 ```
 
-### Dog Sprite
+### Cat Sprite
 
-Modify the dog sprite in `src/render.ts` by editing the SVG rectangles in the `getSpriteDefs()` function.
+Modify the cat sprite in `src/render.ts` by editing the SVG rectangles in the `getSpriteDefs()` function.
 
 ### Animation Speed
 
-Change `ANIMATION_DURATION` in `src/render.ts` to adjust the dog's walking speed.
+Change `ANIMATION_DURATION` in `src/render.ts` to adjust the cat's walking speed.
 
 ## Roadmap
 
-- [ ] Multiple dogs for collaborative projects
+- [ ] Multiple cats for collaborative projects
 - [ ] Different themes (desert, snow, space)
 - [ ] Random wandering mode
 - [ ] Collectible items along the path

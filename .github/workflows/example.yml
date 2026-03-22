@@ -1,4 +1,4 @@
-name: Generate Dog RPG Visualization
+name: Generate Cat RPG Visualization
 
 on:
   schedule:
@@ -34,15 +34,15 @@ jobs:
       - name: Package TypeScript
         run: npm run package
 
-      - name: Generate Dog RPG SVG
+      - name: Generate Cat RPG SVG
         uses: ./
         with:
           github_user_name: ${{ github.repository_owner }}
-          output_path: 'dog-rpg.svg'
+          output_path: 'cat-rpg.svg'
           animate: 'true'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dog-rpg
-          path: dog-rpg.svg
+          name: cat-rpg
+          path: cat-rpg.svg

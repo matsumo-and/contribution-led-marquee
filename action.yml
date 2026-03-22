@@ -1,5 +1,5 @@
-name: 'Dog RPG Contribution Visualizer'
-description: 'Generate a pixel RPG visualization of your GitHub contributions with a dog character'
+name: 'Cat RPG Contribution Visualizer'
+description: 'Generate a pixel RPG visualization of your GitHub contributions with a cat character'
 author: 'Your Name'
 
 branding:
@@ -13,9 +13,9 @@ inputs:
   output_path:
     description: 'Path where the SVG file will be saved'
     required: false
-    default: 'dist/dog-rpg.svg'
+    default: 'dist/cat-rpg.svg'
   animate:
-    description: 'Whether to animate the dog movement'
+    description: 'Whether to animate the cat movement'
     required: false
     default: 'true'
 

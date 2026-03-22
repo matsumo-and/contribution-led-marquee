@@ -1,7 +1,7 @@
 {
-  "name": "dog-rpg-action",
+  "name": "cat-rpg-action",
   "version": "1.0.0",
-  "description": "GitHub Action that generates a Dog RPG visualization from GitHub Contribution Graph",
+  "description": "GitHub Action that generates a Cat RPG visualization from GitHub Contribution Graph",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",

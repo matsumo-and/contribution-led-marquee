@@ -1,5 +1,5 @@
 /**
- * A* pathfinding algorithm for dog movement
+ * A* pathfinding algorithm for cat movement
  */
 
 import { GameMap, TileType } from './map';
