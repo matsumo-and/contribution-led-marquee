@@ -133,8 +133,33 @@ function loadCatSprites(): string {
   const frames = [1, 2];
   let sprites = '';
 
+  // Handle cat-right and cat-left as animated GIFs
+  // GIFs have their own animation, so we only need frame 1
+  const gifDirections = ['right', 'left'];
+  for (const dir of gifDirections) {
+    if (directions.includes(dir)) {
+      try {
+        const gifPath = path.join(__dirname, `../assets/cat-${dir}.gif`);
+        const gifBuffer = fs.readFileSync(gifPath);
+        const base64 = gifBuffer.toString('base64');
+        // Only register frame 1 for GIF directions
+        sprites += `<symbol id="cat-${dir}-1" viewBox="0 0 24 24">
+          <image href="data:image/gif;base64,${base64}" x="6" y="6" width="16" height="16"/>
+        </symbol>\n`;
+      } catch (error) {
+        console.warn(`Failed to load cat-${dir} GIF sprite, using fallback`);
+      }
+    }
+  }
+
   for (const dir of directions) {
     for (const frame of frames) {
+      // Skip right and left directions as they're handled above
+      if (dir === 'right' || dir === 'left') {
+        continue;
+      }
+
+      // Try SVG for other directions or if PNG failed
       try {
         const spritePath = path.join(__dirname, `../assets/cat-${dir}-${frame}.svg`);
         const svgContent = fs.readFileSync(spritePath, 'utf8');
@@ -343,7 +368,7 @@ function renderCat(path: Point[], animate: boolean): string {
 
   // Build combined direction + frame animation
   // Use segment-based approach: change direction at the START of each segment
-  const frameInterval = 0.5; // seconds per frame
+  const frameInterval = 1; // seconds per frame
 
   const animValues: string[] = [];
   const animKeyTimes: string[] = [];
@@ -362,7 +387,11 @@ function renderCat(path: Point[], animate: boolean): string {
 
     // Add frames for this segment
     for (let frameIdx = 0; frameIdx < framesInSegment; frameIdx++) {
-      const frame = (frameIdx % 2) + 1; // Alternate 1, 2
+      // GIF directions (right/left) have built-in animation, so always use frame 1
+      let frame = (frameIdx % 2) + 1; // Alternate 1, 2
+      if (direction === 'right' || direction === 'left') {
+        frame = 1; // GIFs only need frame 1
+      }
       const frameTime = segmentStartTime + (frameIdx * frameInterval);
 
       // Don't exceed segment end time
@@ -381,7 +410,11 @@ function renderCat(path: Point[], animate: boolean): string {
   if (parseFloat(animKeyTimes[animKeyTimes.length - 1]) < 1.0) {
     const lastSegmentIndex = path.length - 2;
     const lastDirection = getDirection(path[lastSegmentIndex], path[lastSegmentIndex + 1]);
-    const lastFrame = (animValues.length % 2) + 1;
+    let lastFrame = (animValues.length % 2) + 1;
+    // GIF directions only use frame 1
+    if (lastDirection === 'right' || lastDirection === 'left') {
+      lastFrame = 1;
+    }
     animValues.push(`#cat-${lastDirection}-${lastFrame}`);
     animKeyTimes.push('1.0');
   }
