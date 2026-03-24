@@ -18,9 +18,22 @@ A GitHub Action that generates a scrolling LED marquee visualization overlaid on
 
 ## Usage
 
-### As a GitHub Action
+### Option 1: Use in This Repository (Recommended)
 
-Create a workflow file (e.g., `.github/workflows/marquee.yml`):
+This repository includes a workflow that generates the marquee automatically.
+
+1. **Edit the workflow** (`.github/workflows/marquee.yml`) to customize your text
+2. **Enable GitHub Actions** in repository settings
+3. **Trigger manually** or wait for scheduled run
+
+The workflow will:
+- Fetch your contribution data
+- Generate the marquee SVG
+- Commit the result to your repository
+
+### Option 2: Use as a Reusable Action
+
+To use this action in another repository, create `.github/workflows/marquee.yml`:
 
 ```yaml
 name: Generate Git Marquee
