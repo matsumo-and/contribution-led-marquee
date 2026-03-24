@@ -1,37 +1,34 @@
-# Cat RPG GitHub Action
+# Git Marquee ⚡
 
-Generate a pixel RPG visualization of your GitHub contributions with a cat character walking across the map!
+A GitHub Action that generates a scrolling LED marquee visualization overlaid on your GitHub Contribution Graph.
 
 ## Features
 
-- Converts GitHub contribution graph into an RPG-style tile map
-- Animated cat character that walks toward treasure tiles
-- Different tile types based on contribution count:
-  - 0 contributions → Grass
-  - 1 contribution → Flower
-  - 2 contributions → Rock
-  - 3 contributions → Tree
-  - 4+ contributions → Treasure
-- A* pathfinding for intelligent cat movement
-- Paw prints showing the cat's trail
-- Pure SVG output (no external images)
+- 📊 Fetches your real GitHub contribution data
+- 🎬 Animated scrolling text like an LED marquee
+- ✨ Smooth transition: shows contribution graph first, then scrolling text
+- 🎨 Uses DotGothic16 pixel font for authentic LED look
+- 🔄 Seamless infinite scrolling animation
+
+## How it works
+
+1. **Initial Display (3 seconds)**: Shows your GitHub contribution graph
+2. **Transition**: Graph fades to background
+3. **Marquee Mode**: Text scrolls right-to-left continuously over the contribution graph
 
 ## Usage
 
-### In a GitHub Workflow
+### As a GitHub Action
 
-Create `.github/workflows/cat-rpg.yml`:
+Create a workflow file (e.g., `.github/workflows/marquee.yml`):
 
 ```yaml
-name: Generate Cat RPG Visualization
+name: Generate Git Marquee
 
 on:
   schedule:
-    # Run daily at 00:00 UTC
-    - cron: '0 0 * * *'
-  workflow_dispatch:
-  push:
-    branches: [main]
+    - cron: '0 0 * * *' # Daily at midnight
+  workflow_dispatch: # Manual trigger
 
 jobs:
   generate:
@@ -39,105 +36,113 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate Cat RPG SVG
-        uses: yourusername/cat-rpg-action@v1
+      - name: Generate Marquee
+        uses: your-username/git-marquee@v1
         with:
           github_user_name: ${{ github.repository_owner }}
-          output_path: 'cat-rpg.svg'
+          text: 'HELLO WORLD'
+          output_path: 'dist/marquee.svg'
 
-      - name: Commit SVG
+      - name: Commit and push
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add cat-rpg.svg
-          git commit -m "Update Cat RPG visualization" || echo "No changes"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add dist/marquee.svg
+          git commit -m "Update marquee" || exit 0
           git push
 ```
 
-### In Your Profile README
+### Local Development
 
-Add to your profile README.md:
+```bash
+# Install dependencies
+npm install
+
+# Build TypeScript
+npm run build
+
+# Run test (generates SVG locally)
+npm run test
+
+# Check output
+open dist/marquee.svg
+```
+
+## Inputs
+
+| Input | Required | Default | Description |
+|-------|----------|---------|-------------|
+| `github_user_name` | Yes | - | GitHub username to fetch contributions for |
+| `text` | Yes | - | Text to display in the LED marquee |
+| `output_path` | No | `dist/marquee.svg` | Path where the SVG file will be saved |
+
+## Outputs
+
+| Output | Description |
+|--------|-------------|
+| `svg_path` | Path to the generated SVG file |
+
+## Example
+
+Embed in your README:
 
 ```markdown
-## My GitHub Journey 🐱
-
-![Cat RPG](./cat-rpg.svg)
-```
-
-## Development
-
-### Setup
-
-```bash
-npm install
-```
-
-### Build
-
-```bash
-npm run build
-npm run package
-```
-
-### Test Locally
-
-```bash
-# Set required environment variables
-export INPUT_GITHUB_USER_NAME="your-username"
-
-# Run the action
-npm run dev
-```
-
-## Project Structure
-
-```
-cat-rpg-action/
-├── src/
-│   ├── fetch.ts       # Fetches GitHub contribution data
-│   ├── parser.ts      # Parses HTML to extract contribution grid
-│   ├── map.ts         # Converts contributions to tile types
-│   ├── pathfinding.ts # A* algorithm for cat movement
-│   ├── render.ts      # SVG generation with sprites
-│   └── index.ts       # Main entry point
-├── dist/              # Compiled JavaScript
-├── action.yml         # GitHub Action metadata
-├── package.json       # Node dependencies
-└── tsconfig.json      # TypeScript config
+![Git Marquee](./dist/marquee.svg)
 ```
 
 ## Customization
 
-### Tile Mapping
+You can customize the appearance by modifying `src/svg.ts`:
 
-Edit `src/map.ts` to change how contributions map to tiles:
+- `cellSize`: Size of each contribution square (default: 10)
+- `cellGap`: Gap between squares (default: 2)
+- `scrollSpeed`: Pixels per second (default: 30)
+- `initialDelay`: Seconds before text appears (default: 3)
 
-```typescript
-function getTileType(contributions: number): TileType {
-  if (contributions === 0) return TileType.GRASS;
-  if (contributions === 1) return TileType.FLOWER;
-  if (contributions === 2) return TileType.ROCK;
-  if (contributions === 3) return TileType.TREE;
-  return TileType.TREASURE;
-}
+## Font
+
+Uses [DotGothic16](https://fonts.google.com/specimen/DotGothic16) from Google Fonts - a pixel-perfect monospace font ideal for LED displays.
+
+## Architecture
+
+```
+src/
+├── fetch.ts       # Fetches GitHub contribution data
+├── parser.ts      # Parses contribution HTML to grid
+├── renderText.ts  # Renders text to pixels using canvas
+├── led.ts         # Converts pixels to LED boolean array
+├── compose.ts     # Composes contribution grid with LED overlay
+├── svg.ts         # Generates animated SVG
+└── index.ts       # Main entry point
 ```
 
-### Cat Sprite
+## How It Works
 
-Modify the cat sprite in `src/render.ts` by editing the SVG rectangles in the `getSpriteDefs()` function.
+### 1. Fetch Contribution Data
+Retrieves your GitHub contribution graph from `https://github.com/users/{username}/contributions`
 
-### Animation Speed
+### 2. Text Rendering
+Uses node-canvas with DotGothic16 font to render text as pixel data
 
-Change `ANIMATION_DURATION` in `src/render.ts` to adjust the cat's walking speed.
+### 3. LED Conversion
+Converts pixel data to boolean array (on/off for each LED)
 
-## Roadmap
+### 4. Composition
+Overlays LED text on contribution graph with proper alignment
 
-- [ ] Multiple cats for collaborative projects
-- [ ] Different themes (desert, snow, space)
-- [ ] Random wandering mode
-- [ ] Collectible items along the path
-- [ ] Day/night cycle based on contribution times
+### 5. SVG Generation
+Creates animated SVG with:
+- Static contribution graph layer (fades out after 3s)
+- Scrolling LED text layer (fades in and scrolls)
+- Seamless looping animation
 
 ## License
 
 MIT
+
+## Credits
+
+Built with:
+- [node-canvas](https://github.com/Automattic/node-canvas) for text rendering
+- [DotGothic16](https://fonts.google.com/specimen/DotGothic16) font
+- GitHub Contribution Graph API

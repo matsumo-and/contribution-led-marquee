@@ -1,23 +1,22 @@
-name: 'Cat RPG Contribution Visualizer'
-description: 'Generate a pixel RPG visualization of your GitHub contributions with a cat character'
+name: 'Git Marquee'
+description: 'Generate a scrolling LED marquee visualization of your GitHub contributions'
 author: 'Your Name'
 
 branding:
-  icon: 'map'
+  icon: 'zap'
   color: 'green'
 
 inputs:
   github_user_name:
     description: 'GitHub username to fetch contributions for'
     required: true
+  text:
+    description: 'Text to display in the LED marquee'
+    required: true
   output_path:
     description: 'Path where the SVG file will be saved'
     required: false
-    default: 'dist/cat-rpg.svg'
-  animate:
-    description: 'Whether to animate the cat movement'
-    required: false
-    default: 'true'
+    default: 'dist/marquee.svg'
 
 outputs:
   svg_path:

@@ -70,3 +70,13 @@ export function parseContributions(html: string): ContributionGrid {
 
   return { cells: grid, width, height };
 }
+
+/**
+ * Returns a simple 2D array of contribution counts (0-4)
+ * Suitable for LED overlay composition
+ */
+export function getContributionLevels(grid: ContributionGrid): number[][] {
+  return grid.cells.map(row =>
+    row.map(cell => cell ? cell.count : 0)
+  );
+}

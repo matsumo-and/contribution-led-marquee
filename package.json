@@ -1,7 +1,7 @@
 {
-  "name": "cat-rpg-action",
+  "name": "git-marquee",
   "version": "1.0.0",
-  "description": "GitHub Action that generates a Cat RPG visualization from GitHub Contribution Graph",
+  "description": "GitHub Action that generates a scrolling LED marquee visualization from GitHub Contribution Graph",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@actions/core": "^1.10.1",
     "@actions/github": "^6.0.0",
+    "canvas": "^3.2.2",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
