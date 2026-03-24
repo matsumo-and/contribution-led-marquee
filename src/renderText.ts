@@ -10,7 +10,7 @@ registerFont(fontPath, { family: 'DotGothic16' });
 
 export interface TextRenderOptions {
   fontSize?: number;
-  padding?: number;
+  letterSpacing?: number; // Spacing between characters in pixels
 }
 
 export interface RenderedText {
@@ -21,53 +21,91 @@ export interface RenderedText {
 
 /**
  * Renders text to pixel data using DotGothic16 font
+ * Height is fixed to 7 pixels to match contribution graph
  * @param text - Text to render
  * @param options - Rendering options
  * @returns Image data with dimensions
  */
 export function renderText(text: string, options: TextRenderOptions = {}): RenderedText {
-  const fontSize = options.fontSize || 16;
-  const padding = options.padding || 2;
+  const fontSize = options.fontSize || 7; // Use 7px font for exact 7px height
+  const letterSpacing = options.letterSpacing !== undefined ? options.letterSpacing : 1; // 1 pixel spacing by default
+  const height = 7; // Fixed height to match contribution graph
 
-  // Create canvas with estimated size
-  // DotGothic16 is monospace-like, so we can estimate width
-  const estimatedWidth = text.length * fontSize + padding * 2;
-  const height = fontSize + padding * 2;
+  // Render each character individually
+  const charCanvases: { canvas: any; width: number }[] = [];
 
-  const canvas = createCanvas(estimatedWidth, height);
-  const ctx = canvas.getContext('2d');
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
 
-  // Configure canvas for pixel-perfect rendering
-  ctx.imageSmoothingEnabled = false;
-  ctx.textBaseline = 'top';
-  ctx.font = `${fontSize}px DotGothic16`;
+    // Create canvas for this character
+    const tempCanvas = createCanvas(fontSize * 3, fontSize * 2);
+    const tempCtx = tempCanvas.getContext('2d');
 
-  // Clear canvas
-  ctx.fillStyle = '#000000';
-  ctx.fillRect(0, 0, estimatedWidth, height);
+    // Configure canvas for pixel-perfect rendering
+    tempCtx.imageSmoothingEnabled = false;
+    tempCtx.textBaseline = 'middle';
+    tempCtx.font = `${fontSize}px DotGothic16`;
 
-  // Render text in white
-  ctx.fillStyle = '#ffffff';
-  ctx.fillText(text, padding, padding);
+    // Clear canvas
+    tempCtx.fillStyle = '#000000';
+    tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
-  // Get actual text width and trim canvas
-  const metrics = ctx.measureText(text);
-  const actualWidth = Math.ceil(metrics.width) + padding * 2;
+    // Render character in white
+    tempCtx.fillStyle = '#ffffff';
+    tempCtx.fillText(char, 0, fontSize);
 
-  // Create final canvas with exact size
-  const finalCanvas = createCanvas(actualWidth, height);
+    // Get character width
+    const metrics = tempCtx.measureText(char);
+    const charWidth = Math.ceil(metrics.width);
+
+    // Store character data
+    charCanvases.push({
+      canvas: tempCanvas,
+      width: charWidth
+    });
+  }
+
+  // Calculate total width
+  const totalCharWidth = charCanvases.reduce((sum, c) => sum + c.width, 0);
+  const totalSpacing = (text.length - 1) * letterSpacing;
+  const finalWidth = totalCharWidth + totalSpacing;
+
+  // Create final canvas
+  const finalCanvas = createCanvas(finalWidth, height);
   const finalCtx = finalCanvas.getContext('2d');
   finalCtx.imageSmoothingEnabled = false;
 
-  // Copy rendered text
-  finalCtx.drawImage(canvas, 0, 0);
+  // Clear to black
+  finalCtx.fillStyle = '#000000';
+  finalCtx.fillRect(0, 0, finalWidth, height);
 
-  // Get image data
-  const imageData = finalCtx.getImageData(0, 0, actualWidth, height);
+  // Copy each character with spacing
+  let destX = 0;
+  for (let i = 0; i < charCanvases.length; i++) {
+    const charData = charCanvases[i];
+
+    // Extract character pixels (crop to 7 pixels height)
+    const tempCtx = charData.canvas.getContext('2d');
+    const charImageData = tempCtx.getImageData(0, Math.floor(fontSize / 2), charData.width, height);
+
+    // Put to final canvas
+    finalCtx.putImageData(charImageData, destX, 0);
+
+    // Move to next position (character width + spacing)
+    destX += charData.width;
+
+    // Add spacing after each character except the last one
+    if (i < charCanvases.length - 1) {
+      destX += letterSpacing;
+    }
+  }
+
+  // Get final image data
+  const finalImageData = finalCtx.getImageData(0, 0, finalWidth, height);
 
   return {
-    imageData: imageData.data,
-    width: actualWidth,
+    imageData: finalImageData.data,
+    width: finalWidth,
     height: height
   };
 }

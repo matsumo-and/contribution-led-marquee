@@ -13,6 +13,10 @@ inputs:
   text:
     description: 'Text to display in the LED marquee'
     required: true
+  show_contributions:
+    description: 'Show contribution graph before text (default: true)'
+    required: false
+    default: 'true'
   output_path:
     description: 'Path where the SVG file will be saved'
     required: false

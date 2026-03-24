@@ -6,8 +6,10 @@ import { CellValue } from './compose';
 export interface SVGOptions {
   cellSize?: number;
   cellGap?: number;
-  scrollSpeed?: number; // pixels per second
-  initialDelay?: number; // seconds before text starts scrolling
+  scrollSpeed?: number; // columns per second
+  initialDelay?: number; // seconds before graph disappears
+  blackDuration?: number; // seconds of black screen
+  showContributions?: boolean; // show contribution graph initially
 }
 
 const CONTRIBUTION_COLORS = {
@@ -42,6 +44,7 @@ export function generateContributionSVG(
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const value = contributionGrid[y][x];
+      // Render all cells, but value=0 uses dark background color
       const color = CONTRIBUTION_COLORS[Math.min(value, 4) as keyof typeof CONTRIBUTION_COLORS];
       const posX = x * (cellSize + cellGap);
       const posY = y * (cellSize + cellGap);
@@ -56,7 +59,8 @@ export function generateContributionSVG(
 
 /**
  * Generates SVG with scrolling LED text overlay
- * Text appears after initialDelay and scrolls continuously
+ * Text scrolls one column at a time (discrete animation)
+ * After one cycle, returns to contribution graph and loops
  */
 export function generateMarqueeSVG(
   contributionGrid: number[][],
@@ -65,8 +69,10 @@ export function generateMarqueeSVG(
 ): string {
   const cellSize = options.cellSize || 10;
   const cellGap = options.cellGap || 2;
-  const scrollSpeed = options.scrollSpeed || 20; // pixels per second
+  const scrollSpeed = options.scrollSpeed || 2; // columns per second
   const initialDelay = options.initialDelay || 3; // 3 seconds
+  const blackDuration = options.blackDuration || 0.5; // 0.5 seconds
+  const showContributions = options.showContributions !== undefined ? options.showContributions : true;
 
   const height = contributionGrid.length;
   const width = contributionGrid[0]?.length || 0;
@@ -75,63 +81,106 @@ export function generateMarqueeSVG(
   const svgWidth = width * (cellSize + cellGap) - cellGap;
   const svgHeight = height * (cellSize + cellGap) - cellGap;
 
-  // Double the LED text for seamless looping
-  const doubledLedWidth = ledWidth * 2;
-  const scrollDistance = ledWidth * (cellSize + cellGap);
-  const duration = scrollDistance / scrollSpeed;
+  const cellWidth = cellSize + cellGap;
+
+  // Calculate animation parameters
+  const columnDuration = 1 / scrollSpeed; // seconds per column
+  const totalColumns = ledWidth + width; // Need to scroll entire text width + viewport to clear screen
+  const ledDuration = totalColumns * columnDuration;
+
+  const textStartTime = showContributions ? initialDelay + blackDuration : 0;
+  const ledEndTime = textStartTime + ledDuration;
+  const cycleDuration = ledEndTime + 1; // Add 1 second pause before loop
 
   let svg = `<svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">`;
-  svg += `<defs>`;
-  svg += `<clipPath id="viewportClip">`;
-  svg += `<rect x="0" y="0" width="${svgWidth}" height="${svgHeight}"/>`;
-  svg += `</clipPath>`;
-  svg += `</defs>`;
 
   // Background
   svg += `<rect width="${svgWidth}" height="${svgHeight}" fill="#0d1117"/>`;
 
-  // Contribution graph layer (always visible)
-  svg += `<g id="contributionLayer">`;
+  // Contribution graph layer (only if showContributions is true)
+  if (showContributions) {
+    svg += `<g id="contributionLayer">`;
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const value = contributionGrid[y][x];
+        // Render all cells, but value=0 uses dark background color
+        const color = CONTRIBUTION_COLORS[Math.min(value, 4) as keyof typeof CONTRIBUTION_COLORS];
+        const posX = x * cellWidth;
+        const posY = y * cellWidth;
+
+        svg += `<rect x="${posX}" y="${posY}" width="${cellSize}" height="${cellSize}" fill="${color}" rx="2">`;
+        // Animation: show -> hide -> show (loop)
+        svg += `<animate attributeName="opacity" `;
+        svg += `values="1;1;0;0;1" `;
+        svg += `keyTimes="0;${initialDelay/cycleDuration};${initialDelay/cycleDuration};${ledEndTime/cycleDuration};1" `;
+        svg += `dur="${cycleDuration}s" `;
+        svg += `repeatCount="indefinite"/>`;
+        svg += `</rect>`;
+      }
+    }
+    svg += `</g>`;
+  }
+
+  // Grid layer (dark background cells for LED mode)
+  svg += `<g id="gridLayer">`;
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      const value = contributionGrid[y][x];
-      const color = CONTRIBUTION_COLORS[Math.min(value, 4) as keyof typeof CONTRIBUTION_COLORS];
-      const posX = x * (cellSize + cellGap);
-      const posY = y * (cellSize + cellGap);
-
-      svg += `<rect x="${posX}" y="${posY}" width="${cellSize}" height="${cellSize}" fill="${color}" rx="2">`;
-      // Fade out when text appears
-      svg += `<animate attributeName="opacity" from="1" to="0.3" dur="1s" begin="${initialDelay}s" fill="freeze"/>`;
+      const posX = x * cellWidth;
+      const posY = y * cellWidth;
+      // All cells use the dark color (contribution 0 color)
+      svg += `<rect x="${posX}" y="${posY}" width="${cellSize}" height="${cellSize}" fill="${CONTRIBUTION_COLORS[0]}" rx="2">`;
+      // Animation: hide -> show -> hide (loop)
+      svg += `<animate attributeName="opacity" `;
+      svg += `values="0;0;1;1;0" `;
+      svg += `keyTimes="0;${textStartTime/cycleDuration};${textStartTime/cycleDuration};${ledEndTime/cycleDuration};1" `;
+      svg += `dur="${cycleDuration}s" `;
+      svg += `repeatCount="indefinite"/>`;
       svg += `</rect>`;
     }
   }
   svg += `</g>`;
 
-  // LED text layer (scrolling)
-  svg += `<g id="ledLayer" clip-path="url(#viewportClip)" opacity="0">`;
-  // Fade in animation
-  svg += `<animate attributeName="opacity" from="0" to="1" dur="1s" begin="${initialDelay}s" fill="freeze"/>`;
+  // LED text layer (scrolling column by column)
+  svg += `<g id="ledLayer">`;
 
-  // Create doubled text for seamless loop
-  for (let copyIndex = 0; copyIndex < 2; copyIndex++) {
-    const offsetX = copyIndex * ledWidth * (cellSize + cellGap);
+  // Create LED cells with discrete column-by-column animation
+  for (let y = 0; y < Math.min(height, ledText.length); y++) {
+    for (let x = 0; x < ledWidth; x++) {
+      if (ledText[y][x]) {
+        const posY = y * cellWidth;
 
-    for (let y = 0; y < Math.min(height, ledText.length); y++) {
-      for (let x = 0; x < ledWidth; x++) {
-        if (ledText[y][x]) {
-          const posX = x * (cellSize + cellGap) + offsetX;
-          const posY = y * (cellSize + cellGap);
+        // Start position: one column outside the right edge of viewport
+        const startX = svgWidth + cellWidth;
 
-          svg += `<rect x="${posX}" y="${posY}" width="${cellSize}" height="${cellSize}" fill="${LED_COLOR}" rx="2"/>`;
+        // Generate discrete x positions (one for each column step)
+        const xPositions: number[] = [];
+        const keyTimes: number[] = [];
+
+        for (let col = 0; col <= totalColumns; col++) {
+          const xPos = startX + (x * cellWidth) - (col * cellWidth);
+          xPositions.push(xPos);
+          keyTimes.push(col / totalColumns);
         }
+
+        svg += `<rect y="${posY}" width="${cellSize}" height="${cellSize}" fill="${LED_COLOR}" rx="2">`;
+
+        // Discrete x-position animation (one cycle per loop)
+        const animationBegin = `${textStartTime}s`;
+        const animationDur = `${ledDuration}s`;
+
+        svg += `<animate id="ledAnim_${y}_${x}" attributeName="x" `;
+        svg += `values="${xPositions.join(';')}" `;
+        svg += `keyTimes="${keyTimes.join(';')}" `;
+        svg += `dur="${animationDur}" `;
+        svg += `begin="${animationBegin};ledAnim_${y}_${x}.end+${cycleDuration - ledEndTime}s" `;
+        svg += `calcMode="discrete"/>`;
+
+        svg += `</rect>`;
       }
     }
   }
 
-  // Scrolling animation
-  svg += `<animateTransform attributeName="transform" type="translate" from="0,0" to="-${scrollDistance},0" dur="${duration}s" begin="${initialDelay + 1}s" repeatCount="indefinite"/>`;
   svg += `</g>`;
-
   svg += '</svg>';
   return svg;
 }
@@ -163,6 +212,7 @@ export function generateStaticSVG(
       if (value === 'led') {
         color = LED_COLOR;
       } else {
+        // Render all cells, value=0 uses dark background color
         color = CONTRIBUTION_COLORS[Math.min(value, 4) as keyof typeof CONTRIBUTION_COLORS];
       }
 
