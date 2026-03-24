@@ -20,7 +20,8 @@ const CONTRIBUTION_COLORS = {
   4: '#39d353'
 };
 
-const LED_COLOR = '#ffffff';
+const LED_COLOR = '#26a641';
+const LED_SHADOW_COLOR = '#0e4429';
 
 /**
  * Generates GitHub contribution graph SVG
@@ -64,7 +65,7 @@ export function generateContributionSVG(
  */
 export function generateMarqueeSVG(
   contributionGrid: number[][],
-  ledText: boolean[][],
+  ledText: number[][],
   options: SVGOptions = {}
 ): string {
   const cellSize = options.cellSize || 10;
@@ -85,7 +86,8 @@ export function generateMarqueeSVG(
 
   // Calculate animation parameters
   const columnDuration = 1 / scrollSpeed; // seconds per column
-  const totalColumns = ledWidth + width; // Need to scroll entire text width + viewport to clear screen
+  // Need to scroll: viewport width + LED text width + 1 extra column to fully clear
+  const totalColumns = width + ledWidth + 1;
   const ledDuration = totalColumns * columnDuration;
 
   const textStartTime = showContributions ? initialDelay + blackDuration : 0;
@@ -146,8 +148,13 @@ export function generateMarqueeSVG(
   // Create LED cells with discrete column-by-column animation
   for (let y = 0; y < Math.min(height, ledText.length); y++) {
     for (let x = 0; x < ledWidth; x++) {
-      if (ledText[y][x]) {
+      const ledValue = ledText[y][x];
+
+      if (ledValue > 0) {
         const posY = y * cellWidth;
+
+        // Choose color based on LED value (1 = main, 0.5 = shadow)
+        const ledColor = ledValue >= 1 ? LED_COLOR : LED_SHADOW_COLOR;
 
         // Start position: one column outside the right edge of viewport
         const startX = svgWidth + cellWidth;
@@ -162,7 +169,7 @@ export function generateMarqueeSVG(
           keyTimes.push(col / totalColumns);
         }
 
-        svg += `<rect y="${posY}" width="${cellSize}" height="${cellSize}" fill="${LED_COLOR}" rx="2">`;
+        svg += `<rect y="${posY}" width="${cellSize}" height="${cellSize}" fill="${ledColor}" rx="2">`;
 
         // Discrete x-position animation (one cycle per loop)
         const animationBegin = `${textStartTime}s`;

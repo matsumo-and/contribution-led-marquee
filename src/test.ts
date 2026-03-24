@@ -29,8 +29,8 @@ async function test() {
     console.log(`Grid size: ${contributionGrid.width}x${contributionGrid.height}`);
     console.log(`Rendering text: "${text}"`);
 
-    // Render text to pixels (fontSize 7 for exact 7-pixel height, 1px letter spacing)
-    const rendered = renderText(text, { fontSize: 7, letterSpacing: 1 });
+    // Render text to pixels using bitmap font (1px letter spacing)
+    const rendered = renderText(text, { letterSpacing: 1 });
 
     console.log(`Text dimensions: ${rendered.width}x${rendered.height}`);
 
