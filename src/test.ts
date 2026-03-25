@@ -43,7 +43,7 @@ async function test() {
     const svg = generateMarqueeSVG(contributionLevels, ledMatrix, {
       cellSize: 10,
       cellGap: 2,
-      scrollSpeed: 4, // columns per second
+      scrollSpeed: 8, // columns per second
       initialDelay: 3, // 3 seconds before graph disappears
       showContributions: true
     });
