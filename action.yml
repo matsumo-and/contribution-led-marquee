@@ -1,6 +1,6 @@
-name: 'Git Marquee'
-description: 'Generate a scrolling LED marquee visualization of your GitHub contributions'
-author: 'Your Name'
+name: 'Contribution LED Marquee'
+description: 'Generate an animated LED marquee visualization using your GitHub Contribution Graph'
+author: 'matsumo-and'
 
 branding:
   icon: 'zap'

@@ -1,20 +1,23 @@
-# Git Marquee ⚡
+# Contribution LED Marquee ⚡
 
-A GitHub Action that generates a scrolling LED marquee visualization overlaid on your GitHub Contribution Graph.
+A GitHub Action that generates an animated LED marquee visualization using your GitHub Contribution Graph.
 
 ## Features
 
-- 📊 Fetches your real GitHub contribution data
-- 🎬 Animated scrolling text like an LED marquee
-- ✨ Smooth transition: shows contribution graph first, then scrolling text
-- 🎨 Uses DotGothic16 pixel font for authentic LED look
-- 🔄 Seamless infinite scrolling animation
+- 📊 **Wave Effect**: Contribution graph appears with a left-to-right wave animation
+- 🎬 **LED Marquee**: Scrolling text in authentic LED style with shadow effects
+- ✨ **Seamless Loop**: Infinite animation cycling between graph and text
+- 🎨 **Custom Bitmap Font**: 5×7 pixel font (a-z, A-Z, 0-9, symbols) with shadow
+- 🔧 **Fully Customizable**: Adjust cell size, speed, delay, and more
+- 🌈 **GitHub Color Palette**: Uses official contribution graph colors
 
 ## How it works
 
-1. **Initial Display (3 seconds)**: Shows your GitHub contribution graph
-2. **Transition**: Graph fades to background
-3. **Marquee Mode**: Text scrolls right-to-left continuously over the contribution graph
+1. **Wave Animation**: Contribution graph lights up column-by-column from left to right
+2. **Display**: Graph stays visible for a configurable time (default: 3 seconds)
+3. **Transition**: Instantly switches to LED marquee mode
+4. **Marquee**: Text scrolls right-to-left with discrete column animation
+5. **Loop**: Returns to step 1 for seamless infinite animation
 
 ## Usage
 
@@ -36,7 +39,7 @@ The workflow will:
 To use this action in another repository, create `.github/workflows/marquee.yml`:
 
 ```yaml
-name: Generate Git Marquee
+name: Generate Contribution LED Marquee
 
 on:
   schedule:
@@ -50,10 +53,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Generate Marquee
-        uses: your-username/git-marquee@v1
+        uses: your-username/contribution-led-marquee@v1
         with:
           github_user_name: ${{ github.repository_owner }}
-          text: 'HELLO WORLD'
+          text: 'HELLO WORLD ☆'
+          show_contributions: true
+          cell_size: '10'
+          cell_gap: '2'
+          scroll_speed: '4'
+          initial_delay: '3'
           output_path: 'dist/marquee.svg'
 
       - name: Commit and push
@@ -86,7 +94,12 @@ open dist/marquee.svg
 | Input | Required | Default | Description |
 |-------|----------|---------|-------------|
 | `github_user_name` | Yes | - | GitHub username to fetch contributions for |
-| `text` | Yes | - | Text to display in the LED marquee |
+| `text` | Yes | - | Text to display in the LED marquee (supports a-z, A-Z, 0-9, symbols) |
+| `show_contributions` | No | `true` | Show contribution graph before text |
+| `cell_size` | No | `10` | Size of each cell in pixels |
+| `cell_gap` | No | `2` | Gap between cells in pixels |
+| `scroll_speed` | No | `4` | Scroll speed in columns per second |
+| `initial_delay` | No | `3` | Seconds before graph disappears |
 | `output_path` | No | `dist/marquee.svg` | Path where the SVG file will be saved |
 
 ## Outputs
@@ -100,21 +113,33 @@ open dist/marquee.svg
 Embed in your README:
 
 ```markdown
-![Git Marquee](./dist/marquee.svg)
+![Contribution LED Marquee](./dist/marquee.svg)
 ```
 
 ## Customization
 
-You can customize the appearance by modifying `src/svg.ts`:
+All parameters can be configured via GitHub Actions inputs (see [Inputs](#inputs) section). No code changes needed!
 
-- `cellSize`: Size of each contribution square (default: 10)
-- `cellGap`: Gap between squares (default: 2)
-- `scrollSpeed`: Pixels per second (default: 30)
-- `initialDelay`: Seconds before text appears (default: 3)
+### Supported Characters
+
+The custom bitmap font includes:
+- **Uppercase**: A-Z
+- **Lowercase**: a-z
+- **Numbers**: 0-9
+- **Symbols**: `! ? . , : ; - + = * / ( ) @ # $ % & ^ ∩ ⊃ ━ ☆ ゜`
+- **Space**: ` `
+
+### Shadow Effect
+
+Each character has a shadow effect:
+- Shadow appears to the right of lit pixels
+- Creates a 3D depth effect
+- Shadow color: `#0e4429` (GitHub contribution level 1)
+- Main LED color: `#26a641` (GitHub contribution level 3)
 
 ## Font
 
-Uses [DotGothic16](https://fonts.google.com/specimen/DotGothic16) from Google Fonts - a pixel-perfect monospace font ideal for LED displays.
+Custom 5×7 pixel bitmap font with shadow (total 6×7 with shadow column). Designed specifically for LED marquee displays with authentic retro aesthetics.
 
 ## Architecture
 
@@ -122,11 +147,11 @@ Uses [DotGothic16](https://fonts.google.com/specimen/DotGothic16) from Google Fo
 src/
 ├── fetch.ts       # Fetches GitHub contribution data
 ├── parser.ts      # Parses contribution HTML to grid
-├── renderText.ts  # Renders text to pixels using canvas
-├── led.ts         # Converts pixels to LED boolean array
-├── compose.ts     # Composes contribution grid with LED overlay
-├── svg.ts         # Generates animated SVG
-└── index.ts       # Main entry point
+├── bitmapFont.ts  # Custom 5×7 bitmap font with shadow
+├── renderText.ts  # Renders text using bitmap font
+├── led.ts         # Converts pixel data to LED number array (0, 0.5, 1)
+├── svg.ts         # Generates animated SVG with SMIL animations
+└── index.ts       # Main entry point (GitHub Action)
 ```
 
 ## How It Works
@@ -135,19 +160,24 @@ src/
 Retrieves your GitHub contribution graph from `https://github.com/users/{username}/contributions`
 
 ### 2. Text Rendering
-Uses node-canvas with DotGothic16 font to render text as pixel data
+- Uses custom bitmap font defined in `bitmapFont.ts`
+- Each character is 5×7 pixels (6×7 with shadow)
+- Shadow automatically added to right side of lit pixels
+- 1px spacing between characters
 
 ### 3. LED Conversion
-Converts pixel data to boolean array (on/off for each LED)
+Converts pixel data to number array with three values:
+- `0`: Off (background)
+- `0.5`: Shadow (darker green `#0e4429`)
+- `1`: Main LED (brighter green `#26a641`)
 
-### 4. Composition
-Overlays LED text on contribution graph with proper alignment
-
-### 5. SVG Generation
-Creates animated SVG with:
-- Static contribution graph layer (fades out after 3s)
-- Scrolling LED text layer (fades in and scrolls)
-- Seamless looping animation
+### 4. SVG Generation
+Creates animated SVG with SMIL animations:
+- **Base Grid Layer**: Dark background cells always visible during contribution phase
+- **Contribution Layer**: Colored cells with left-to-right wave effect
+- **Grid Layer**: Dark cells for LED mode background
+- **LED Layer**: Scrolling text with discrete column-by-column animation
+- All animations use `calcMode="discrete"` for authentic LED look
 
 ## License
 
@@ -156,6 +186,7 @@ MIT
 ## Credits
 
 Built with:
-- [node-canvas](https://github.com/Automattic/node-canvas) for text rendering
-- [DotGothic16](https://fonts.google.com/specimen/DotGothic16) font
+- Custom bitmap font (5×7 with shadow)
+- SVG SMIL animations
 - GitHub Contribution Graph API
+- TypeScript + GitHub Actions
