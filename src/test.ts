@@ -45,7 +45,6 @@ async function test() {
       cellGap: 2,
       scrollSpeed: 2, // columns per second
       initialDelay: 3, // 3 seconds before graph disappears
-      blackDuration: 0.5, // 0.5 seconds of black screen
       showContributions: true
     });
 

@@ -17,7 +17,10 @@ async function run(): Promise<void> {
     const githubUserName = core.getInput('github_user_name', { required: true });
     const text = core.getInput('text', { required: true });
     const outputPath = core.getInput('output_path') || 'dist/marquee.svg';
-    const showContributions = core.getBooleanInput('show_contributions') !== false; // default: true
+
+    // Get show_contributions as string and convert to boolean (default: true)
+    const showContributionsInput = core.getInput('show_contributions');
+    const showContributions = showContributionsInput === '' || showContributionsInput.toLowerCase() !== 'false';
 
     console.log(`Fetching contribution data for ${githubUserName}...`);
 
@@ -49,7 +52,6 @@ async function run(): Promise<void> {
       cellGap: 2,
       scrollSpeed: 2, // columns per second
       initialDelay: 3, // 3 seconds before graph disappears
-      blackDuration: 0.5, // 0.5 seconds of black screen
       showContributions: showContributions
     });
 

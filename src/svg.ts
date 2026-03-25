@@ -70,7 +70,7 @@ export function generateMarqueeSVG(
 ): string {
   const cellSize = options.cellSize || 10;
   const cellGap = options.cellGap || 2;
-  const scrollSpeed = options.scrollSpeed || 2; // columns per second
+  const scrollSpeed = options.scrollSpeed || 4; // columns per second
   const initialDelay = options.initialDelay || 3; // 3 seconds
   const blackDuration = options.blackDuration || 0.5; // 0.5 seconds
   const showContributions = options.showContributions !== undefined ? options.showContributions : true;
@@ -90,7 +90,8 @@ export function generateMarqueeSVG(
   const totalColumns = width + ledWidth + 1;
   const ledDuration = totalColumns * columnDuration;
 
-  const textStartTime = showContributions ? initialDelay + blackDuration : 0;
+  // Graph disappears instantly, grid/LED appears at the same time (no black screen)
+  const textStartTime = showContributions ? initialDelay : 0;
   const ledEndTime = textStartTime + ledDuration;
   const cycleDuration = ledEndTime + 1; // Add 1 second pause before loop
 

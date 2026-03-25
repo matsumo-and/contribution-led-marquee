@@ -16,7 +16,7 @@ inputs:
   show_contributions:
     description: 'Show contribution graph before text (default: true)'
     required: false
-    default: 'true'
+    default: true
   output_path:
     description: 'Path where the SVG file will be saved'
     required: false
