@@ -4,8 +4,7 @@
   "description": "GitHub Action that generates an animated LED marquee visualization using your GitHub Contribution Graph",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "package": "ncc build dist/index.js -o dist/compiled",
+    "build": "ncc build src/index.ts -o dist",
     "dev": "ts-node src/index.ts",
     "test": "ts-node src/test.ts"
   },

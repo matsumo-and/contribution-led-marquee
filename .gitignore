@@ -9,10 +9,13 @@ lerna-debug.log*
 # TypeScript
 *.tsbuildinfo
 
-# Build output (allow dist/*.js for GitHub Actions)
+# Build output (allow dist/index.js for GitHub Actions)
 dist/compiled/
 dist/*.svg
 dist/*.html
+dist/*.d.ts
+dist/*.d.ts.map
+dist/*.js.map
 
 # Environment variables
 .env
