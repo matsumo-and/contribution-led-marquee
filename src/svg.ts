@@ -112,11 +112,12 @@ export function generateMarqueeSVG(
         const posY = y * cellWidth;
 
         svg += `<rect x="${posX}" y="${posY}" width="${cellSize}" height="${cellSize}" fill="${color}" rx="2">`;
-        // Animation: show -> hide -> show (loop)
+        // Animation: show -> hide -> show (instant transitions, no fade)
         svg += `<animate attributeName="opacity" `;
         svg += `values="1;1;0;0;1" `;
         svg += `keyTimes="0;${initialDelay/cycleDuration};${initialDelay/cycleDuration};${ledEndTime/cycleDuration};1" `;
         svg += `dur="${cycleDuration}s" `;
+        svg += `calcMode="discrete" `;
         svg += `repeatCount="indefinite"/>`;
         svg += `</rect>`;
       }
@@ -132,11 +133,12 @@ export function generateMarqueeSVG(
       const posY = y * cellWidth;
       // All cells use the dark color (contribution 0 color)
       svg += `<rect x="${posX}" y="${posY}" width="${cellSize}" height="${cellSize}" fill="${CONTRIBUTION_COLORS[0]}" rx="2">`;
-      // Animation: hide -> show -> hide (loop)
+      // Animation: hide -> show -> hide (instant transitions, no fade)
       svg += `<animate attributeName="opacity" `;
       svg += `values="0;0;1;1;0" `;
       svg += `keyTimes="0;${textStartTime/cycleDuration};${textStartTime/cycleDuration};${ledEndTime/cycleDuration};1" `;
       svg += `dur="${cycleDuration}s" `;
+      svg += `calcMode="discrete" `;
       svg += `repeatCount="indefinite"/>`;
       svg += `</rect>`;
     }
@@ -161,27 +163,48 @@ export function generateMarqueeSVG(
         const startX = svgWidth + cellWidth;
 
         // Generate discrete x positions (one for each column step)
-        const xPositions: number[] = [];
-        const keyTimes: number[] = [];
+        const xPositions: number[] = [startX + (x * cellWidth)]; // Initial position (before animation)
+        const keyTimes: number[] = [0];
+
+        // Add scroll positions from textStartTime to ledEndTime
+        keyTimes.push(textStartTime / cycleDuration);
+        xPositions.push(startX + (x * cellWidth)); // Still at start position at textStartTime
 
         for (let col = 0; col <= totalColumns; col++) {
           const xPos = startX + (x * cellWidth) - (col * cellWidth);
-          xPositions.push(xPos);
-          keyTimes.push(col / totalColumns);
+          const time = textStartTime + (col * columnDuration);
+          const keyTime = time / cycleDuration;
+
+          if (keyTime <= 1) {
+            xPositions.push(xPos);
+            keyTimes.push(keyTime);
+          }
+        }
+
+        // Add final position at end of cycle
+        if (keyTimes[keyTimes.length - 1] < 1) {
+          keyTimes.push(1);
+          xPositions.push(xPositions[xPositions.length - 1]);
         }
 
         svg += `<rect y="${posY}" width="${cellSize}" height="${cellSize}" fill="${ledColor}" rx="2">`;
 
-        // Discrete x-position animation (one cycle per loop)
-        const animationBegin = `${textStartTime}s`;
-        const animationDur = `${ledDuration}s`;
-
-        svg += `<animate id="ledAnim_${y}_${x}" attributeName="x" `;
+        // X-position animation (discrete scrolling)
+        svg += `<animate attributeName="x" `;
         svg += `values="${xPositions.join(';')}" `;
         svg += `keyTimes="${keyTimes.join(';')}" `;
-        svg += `dur="${animationDur}" `;
-        svg += `begin="${animationBegin};ledAnim_${y}_${x}.end+${cycleDuration - ledEndTime}s" `;
-        svg += `calcMode="discrete"/>`;
+        svg += `dur="${cycleDuration}s" `;
+        svg += `begin="0s" `;
+        svg += `calcMode="discrete" `;
+        svg += `repeatCount="indefinite"/>`;
+
+        // Opacity animation (hide before textStartTime and after ledEndTime)
+        svg += `<animate attributeName="opacity" `;
+        svg += `values="0;0;1;1;0" `;
+        svg += `keyTimes="0;${textStartTime/cycleDuration};${textStartTime/cycleDuration};${ledEndTime/cycleDuration};1" `;
+        svg += `dur="${cycleDuration}s" `;
+        svg += `calcMode="discrete" `;
+        svg += `repeatCount="indefinite"/>`;
 
         svg += `</rect>`;
       }
