@@ -126,7 +126,7 @@ The custom bitmap font includes:
 - **Uppercase**: A-Z
 - **Lowercase**: a-z
 - **Numbers**: 0-9
-- **Symbols**: `! ? . , : ; - + = * / ( ) @ # $ % & ^ ∩ ⊃ ━ ☆ ゜`
+- **Symbols**: `! ? . , : ; - + = * / ( ) @ # $ % &`
 - **Space**: ` `
 
 ### Shadow Effect
