@@ -22,6 +22,11 @@ async function run(): Promise<void> {
     const showContributionsInput = core.getInput('show_contributions');
     const showContributions = showContributionsInput === '' || showContributionsInput.toLowerCase() !== 'false';
 
+    // Validate text input
+    if (text.trim().length === 0) {
+      throw new Error('Text input cannot be empty or only whitespace');
+    }
+
     console.log(`Fetching contribution data for ${githubUserName}...`);
 
     // Fetch contribution data
