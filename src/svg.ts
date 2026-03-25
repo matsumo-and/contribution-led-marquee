@@ -90,6 +90,10 @@ export function generateMarqueeSVG(
   const totalColumns = width + ledWidth + 1;
   const ledDuration = totalColumns * columnDuration;
 
+  // Wave animation parameters for contribution graph
+  const waveAnimationDuration = showContributions ? 1.5 : 0; // 1.5 seconds for wave effect
+  const columnDelay = waveAnimationDuration / width; // Delay per column
+
   // Graph disappears instantly, grid/LED appears at the same time (no black screen)
   const textStartTime = showContributions ? initialDelay : 0;
   const ledEndTime = textStartTime + ledDuration;
@@ -100,19 +104,16 @@ export function generateMarqueeSVG(
   // Background
   svg += `<rect width="${svgWidth}" height="${svgHeight}" fill="#0d1117"/>`;
 
-  // Contribution graph layer (only if showContributions is true)
+  // Base grid layer (always visible during contribution graph phase)
   if (showContributions) {
-    svg += `<g id="contributionLayer">`;
+    svg += `<g id="baseGridLayer">`;
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
-        const value = contributionGrid[y][x];
-        // Render all cells, but value=0 uses dark background color
-        const color = CONTRIBUTION_COLORS[Math.min(value, 4) as keyof typeof CONTRIBUTION_COLORS];
         const posX = x * cellWidth;
         const posY = y * cellWidth;
-
-        svg += `<rect x="${posX}" y="${posY}" width="${cellSize}" height="${cellSize}" fill="${color}" rx="2">`;
-        // Animation: show -> hide -> show (instant transitions, no fade)
+        // All cells use the dark color (contribution 0 color)
+        svg += `<rect x="${posX}" y="${posY}" width="${cellSize}" height="${cellSize}" fill="${CONTRIBUTION_COLORS[0]}" rx="2">`;
+        // Animation: show -> hide -> show (loop)
         svg += `<animate attributeName="opacity" `;
         svg += `values="1;1;0;0;1" `;
         svg += `keyTimes="0;${initialDelay/cycleDuration};${initialDelay/cycleDuration};${ledEndTime/cycleDuration};1" `;
@@ -120,6 +121,35 @@ export function generateMarqueeSVG(
         svg += `calcMode="discrete" `;
         svg += `repeatCount="indefinite"/>`;
         svg += `</rect>`;
+      }
+    }
+    svg += `</g>`;
+
+    // Contribution color layer (wave effect on top of base grid)
+    svg += `<g id="contributionLayer">`;
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const value = contributionGrid[y][x];
+
+        // Only render cells with contributions (value > 0)
+        if (value > 0) {
+          const color = CONTRIBUTION_COLORS[Math.min(value, 4) as keyof typeof CONTRIBUTION_COLORS];
+          const posX = x * cellWidth;
+          const posY = y * cellWidth;
+          const columnAppearTime = x * columnDelay;
+
+          svg += `<rect x="${posX}" y="${posY}" width="${cellSize}" height="${cellSize}" fill="${color}" rx="2">`;
+
+          // Wave effect animation that loops
+          svg += `<animate attributeName="opacity" `;
+          svg += `values="0;1;1;0;0" `;
+          svg += `keyTimes="0;${columnAppearTime/cycleDuration};${initialDelay/cycleDuration};${initialDelay/cycleDuration};1" `;
+          svg += `dur="${cycleDuration}s" `;
+          svg += `calcMode="discrete" `;
+          svg += `repeatCount="indefinite"/>`;
+
+          svg += `</rect>`;
+        }
       }
     }
     svg += `</g>`;

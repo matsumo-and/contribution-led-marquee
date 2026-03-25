@@ -55,7 +55,7 @@ async function run(): Promise<void> {
     const svg = generateMarqueeSVG(contributionLevels, ledMatrix, {
       cellSize: 10,
       cellGap: 2,
-      scrollSpeed: 2, // columns per second
+      scrollSpeed: 4, // columns per second
       initialDelay: 3, // 3 seconds before graph disappears
       showContributions: showContributions
     });
