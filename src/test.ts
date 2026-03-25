@@ -13,7 +13,7 @@ import { generateMarqueeSVG, generateContributionSVG } from './svg';
 async function test() {
   try {
     const githubUserName = 'matsumo-and'; // Replace with your GitHub username
-    const text = 'HELLO World!';
+    const text = 'Hi there!';
 
     console.log(`Fetching contribution data for ${githubUserName}...`);
 

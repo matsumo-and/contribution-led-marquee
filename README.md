@@ -2,6 +2,8 @@
 
 A GitHub Action that generates an animated LED marquee visualization using your GitHub Contribution Graph.
 
+![Contribution LED Marquee](./assets/marquee.svg)
+
 ## Features
 
 - 📊 **Wave Effect**: Contribution graph appears with a left-to-right wave animation
