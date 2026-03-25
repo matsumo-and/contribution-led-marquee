@@ -17,6 +17,22 @@ inputs:
     description: 'Show contribution graph before text (default: true)'
     required: false
     default: true
+  cell_size:
+    description: 'Size of each cell in pixels (default: 10)'
+    required: false
+    default: '10'
+  cell_gap:
+    description: 'Gap between cells in pixels (default: 2)'
+    required: false
+    default: '2'
+  scroll_speed:
+    description: 'Scroll speed in columns per second (default: 4)'
+    required: false
+    default: '4'
+  initial_delay:
+    description: 'Seconds before graph disappears (default: 3)'
+    required: false
+    default: '3'
   output_path:
     description: 'Path where the SVG file will be saved'
     required: false

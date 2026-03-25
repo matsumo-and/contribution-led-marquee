@@ -22,6 +22,12 @@ async function run(): Promise<void> {
     const showContributionsInput = core.getInput('show_contributions');
     const showContributions = showContributionsInput === '' || showContributionsInput.toLowerCase() !== 'false';
 
+    // Get numeric parameters
+    const cellSize = parseInt(core.getInput('cell_size') || '10', 10);
+    const cellGap = parseInt(core.getInput('cell_gap') || '2', 10);
+    const scrollSpeed = parseFloat(core.getInput('scroll_speed') || '4');
+    const initialDelay = parseFloat(core.getInput('initial_delay') || '3');
+
     // Validate text input
     if (text.trim().length === 0) {
       throw new Error('Text input cannot be empty or only whitespace');
@@ -53,11 +59,11 @@ async function run(): Promise<void> {
 
     // Generate SVG with scrolling animation
     const svg = generateMarqueeSVG(contributionLevels, ledMatrix, {
-      cellSize: 10,
-      cellGap: 2,
-      scrollSpeed: 4, // columns per second
-      initialDelay: 3, // 3 seconds before graph disappears
-      showContributions: showContributions
+      cellSize,
+      cellGap,
+      scrollSpeed,
+      initialDelay,
+      showContributions
     });
 
     // Ensure output directory exists
